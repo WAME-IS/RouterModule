@@ -1,0 +1,2 @@
+services:
+	- Wame\RouterModule\Vendor\Wame\AdminModule\Forms\RouterForm

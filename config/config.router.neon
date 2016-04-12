@@ -1,0 +1,14 @@
+services:
+	router.module: Wame\RouterModule
+
+	# Entities
+	- Wame\RouterModule\Entities\RouterEntity
+
+	# Repositories
+	- Wame\RouterModule\Repositories\RouterRepository
+
+
+doctrine:
+	metadata:
+		Wame\RouterModule\Entities: %appDir%/../vendor/wame/RouterModule/entities
+		Wame\RouterModule\Repositories: %appDir%/../vendor/wame/RouterModule/repositories
