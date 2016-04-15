@@ -2,21 +2,18 @@
 
 namespace Wame\RouterModule\Repositories;
 
-use Nette\Application\Routers\Route;
 use Wame\RouterModule\Entities\RouterEntity;
 
 class RouterRepository extends \Wame\Core\Repositories\BaseRepository
 {
-	const TABLE_NAME = 'router';
-	
 	const STATUS_DISABLED = 0;
 	const STATUS_ENABLED = 1;
 	
 	/** @var RouterEntity */
 	private $routerEntity;
 	
-	public function __construct(\Nette\DI\Container $container, \Kdyby\Doctrine\EntityManager $entityManager) {
-		parent::__construct($container, $entityManager, self::TABLE_NAME);
+	public function __construct(\Nette\DI\Container $container, \Kdyby\Doctrine\EntityManager $entityManager, \h4kuna\Gettext\GettextSetup $translator, \Nette\Security\User $user) {
+		parent::__construct($container, $entityManager, $translator, $user);
 		
 		$this->routerEntity = $entityManager->getRepository(RouterEntity::class);
 	}

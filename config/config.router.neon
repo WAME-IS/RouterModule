@@ -1,5 +1,15 @@
 services:
-	router.module: Wame\RouterModule
+	PermissionObject:
+		setup:
+			- addResource('router')
+			- addResourceAction('router', 'view')
+			- allow('admin', 'router', 'view')
+			- addResourceAction('router', 'add')
+			- allow('admin', 'router', 'add')
+			- addResourceAction('router', 'edit')
+			- allow('admin', 'router', 'edit')
+			- addResourceAction('router', 'delete')
+			- allow('admin', 'router', 'delete')
 
 	# Entities
 	- Wame\RouterModule\Entities\RouterEntity
