@@ -18,10 +18,6 @@ services:
 	- Wame\RouterModule\Repositories\RouterRepository
 
 	# Registers
-	routePreprocessorRegister:
-		class: Wame\RouterModule\Registers\RoutePreprocessorRegister
-	routePostprocessorRegister:
-		class: Wame\RouterModule\Registers\RoutePostprocessorRegister
 	defaultRoutesRegister:
 		class: Wame\RouterModule\Model\DefaultRoutesRegister
 

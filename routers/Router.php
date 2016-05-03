@@ -3,27 +3,44 @@
 namespace Wame\RouterModule\Routers;
 
 use Nette\Application\Routers\RouteList,
-	Wame\RouterModule\Registers\RoutePostprocessorRegister,
-	Wame\RouterModule\Registers\RoutePreprocessorRegister,
+	Wame\RouterModule\Event\RoutePostprocessEvent,
+	Wame\RouterModule\Event\RoutePreprocessEvent,
 	Wame\RouterModule\Repositories\RouterRepository;
 
 class Router extends RouteList {
 
-	public function __construct(RouterRepository $routerRepository, RoutePreprocessorRegister $routePreprocessorRegister, RoutePostprocessorRegister $routePostprocessorRegister) {
+	/**
+	 * Event called before creating route. Function can accept one argument of RoutePreprocessEvent type.
+	 * @var array
+	 */
+	public $onPreprocess;
+
+	/**
+	 * Event called after creating route. Function can accept one argument of RoutePreprocessEvent type.
+	 * @var array
+	 */
+	public $onPostprocess;
+
+	public function __construct(RouterRepository $routerRepository) {
 
 		foreach ($routerRepository->find() as $route) {
 
-			foreach ($routePreprocessorRegister as $preprocessor) {
-				$preprocessor->process($route);
+			$routePreprocessEvent = new RoutePreprocessEvent($route);
+			$this->onPreprocess($routePreprocessEvent);
+			$route = $routePreprocessEvent->getRoute();
+			if (!$route) {
+				continue;
 			}
 
 			$netteRoute = $route->createRoute();
 
-			foreach ($routePostprocessorRegister as $postprocessor) {
-				$postprocessor->process($netteRoute);
+			$routePostprocessEvent = new RoutePostprocessEvent($netteRoute);
+			$this->onPostprocess($routePostprocessEvent);
+			if (!$routePostprocessEvent->getRoute()) {
+				continue;
 			}
 
-			$this[] = $netteRoute;
+			$this[] = $routePostprocessEvent->getRoute();
 		}
 	}
 
