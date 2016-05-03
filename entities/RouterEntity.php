@@ -2,22 +2,23 @@
 
 namespace Wame\RouterModule\Entities;
 
-use Doctrine\ORM\Mapping as ORM;
-use Nette\Neon\Neon;
-use Nette\Application\Routers\Route;
+use Doctrine\ORM\Mapping as ORM,
+	Nette\Application\Routers\Route,
+	Nette\Neon\Neon,
+	Nette\Object;
 
 /**
  * @ORM\Table(name="wame_router")
  * @ORM\Entity
  */
-class RouterEntity extends \Wame\Core\Entities\BaseEntity 
-{
-    /**
-     * @ORM\Column(name="id", type="integer", length=2, nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    protected $id;
+class RouterEntity extends \Wame\Core\Entities\BaseEntity {
+
+	/**
+	 * @ORM\Column(name="id", type="integer", length=2, nullable=false)
+	 * @ORM\Id
+	 * @ORM\GeneratedValue(strategy="IDENTITY")
+	 */
+	protected $id;
 
 	/**
 	 * @ORM\Column(name="route", type="string", length=255, nullable=false)
@@ -45,7 +46,7 @@ class RouterEntity extends \Wame\Core\Entities\BaseEntity
 	protected $action;
 
 	/**
-	 * @ORM\Column(name="defaults", type="string", length=255, nullable=false)
+	 * @ORM\Column(name="defaults", type="neon", length=512, nullable=true)
 	 */
 	protected $defaults;
 
@@ -60,17 +61,25 @@ class RouterEntity extends \Wame\Core\Entities\BaseEntity
 	protected $sitemap;
 
 	/**
-	 * @ORM\Column(name="status", type="integer", length=1, nullable=true)
+	 * @ORM\Column(name="status", type="integer", length=1, nullable=false)
 	 */
 	protected $status;
 
-	/**
-	 * @ORM\Column(name="parent", type="integer", length=11, nullable=false)
-	 */
-	protected $parentRoute;
+	function getDefault($name) {
+		if (array_key_exists($name, $this->defaults)) {
+			return $this->defaults[$name];
+		}
+	}
 
-	public function generateRoute() 
-	{
+	function setDefault($name, $value) {
+		$this->defaults[$name] = $value;
+	}
+
+	/**
+	 * 
+	 * @return Route
+	 */
+	public function createRoute() {
 		$data = [
 			'presenter' => $this->presenter,
 			'action' => $this->action
@@ -79,14 +88,14 @@ class RouterEntity extends \Wame\Core\Entities\BaseEntity
 		if ($this->module) {
 			$data['module'] = $this->module;
 		}
-		
-		$defaults = Neon::decode($this->defaults);
-		
+
+		$defaults = $this->defaults;
+
 		if (is_array($defaults)) {
 			$data = array_merge($defaults, $data);
 		}
-		
-		return new Route($this->path, $data);
+
+		return new Route($this->route, $data);
 	}
-	
+
 }

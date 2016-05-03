@@ -1,4 +1,7 @@
 services:
+	router:
+		class: Wame\RouterModule\Routers\Router
+
 	PermissionObject:
 		setup:
 			- addResource('router')
@@ -11,14 +14,18 @@ services:
 			- addResourceAction('router', 'delete')
 			- allow('admin', 'router', 'delete')
 
-	# Entities
-	- Wame\RouterModule\Entities\RouterEntity
-
 	# Repositories
 	- Wame\RouterModule\Repositories\RouterRepository
+
+	# Registers
+	routePreprocessorRegister:
+		class: Wame\RouterModule\Registers\RoutePreprocessorRegister
+	routePostprocessorRegister:
+		class: Wame\RouterModule\Registers\RoutePostprocessorRegister
+	defaultRoutesRegister:
+		class: Wame\RouterModule\Model\DefaultRoutesRegister
 
 
 doctrine:
 	metadata:
 		Wame\RouterModule\Entities: %appDir%/../vendor/wame/RouterModule/entities
-		Wame\RouterModule\Repositories: %appDir%/../vendor/wame/RouterModule/repositories
