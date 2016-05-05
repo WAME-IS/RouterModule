@@ -2,12 +2,15 @@
 
 namespace Wame\RouterModule\Repositories;
 
-use h4kuna\Gettext\GettextSetup,
+use Doctrine\DBAL\Types\Type,
+	h4kuna\Gettext\GettextSetup,
 	Kdyby\Doctrine\EntityManager,
+	Nette\Application\UI\Presenter,
 	Nette\DI\Container,
 	Nette\Security\User,
 	Wame\Core\Repositories\BaseRepository,
 	Wame\RouterModule\Entities\RouterEntity;
+use function dump;
 
 class RouterRepository extends BaseRepository {
 
@@ -30,14 +33,33 @@ class RouterRepository extends BaseRepository {
 	 * @return RouterEntity[] routes
 	 */
 	public function find($criteria = array(), $orderBy = null, $limit = null, $offset = null) {
-		
-		dump(\Doctrine\DBAL\Types\Type::getTypesMap());
-		
-		if(!$orderBy) {
-			$orderBy = ['sort'=>'desc'];
+
+		if (!$orderBy) {
+			$orderBy = ['sort' => 'desc'];
 		}
-		
+
 		return $this->routerEntity->findBy($criteria, $orderBy, $limit, $offset);
+	}
+
+	/**
+	 * 
+	 * @param Presenter $presenter
+	 * @return RouterEntity
+	 */
+	public function byPresenter(Presenter $presenter) {
+
+		$module = NULL;
+		if (method_exists($presenter, 'getModule')) {
+			$module = $presenter->getModule();
+		}
+
+		$full = $this->find([
+			'module' => $module,
+			'presenter' => $presenter->getName(),
+			'action' => $presenter->getAction()
+		]);
+
+		return $full;
 	}
 
 }
