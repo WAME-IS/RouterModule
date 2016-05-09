@@ -10,13 +10,13 @@ use Nette\Application\Routers\RouteList,
 class Router extends RouteList {
 
 	/**
-	 * Event called before creating route. Function can accept one argument of RoutePreprocessEvent type.
+	 * Event called before creating route. Function accepts one argument of RoutePreprocessEvent type.
 	 * @var array
 	 */
 	public $onPreprocess;
 
 	/**
-	 * Event called after creating route. Function can accept one argument of RoutePreprocessEvent type.
+	 * Event called after creating route. Function accepts one argument of RoutePreprocessEvent type.
 	 * @var array
 	 */
 	public $onPostprocess;
