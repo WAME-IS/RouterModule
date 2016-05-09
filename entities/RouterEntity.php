@@ -4,14 +4,13 @@ namespace Wame\RouterModule\Entities;
 
 use Doctrine\ORM\Mapping as ORM,
 	Nette\Application\Routers\Route,
-	Nette\Neon\Neon,
-	Nette\Object;
+	Wame\Core\Entities\BaseEntity;
 
 /**
  * @ORM\Table(name="wame_router")
  * @ORM\Entity
  */
-class RouterEntity extends \Wame\Core\Entities\BaseEntity {
+class RouterEntity extends BaseEntity {
 
 	/**
 	 * @ORM\Column(name="id", type="integer", length=2, nullable=false)

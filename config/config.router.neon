@@ -21,6 +21,10 @@ services:
 	defaultRoutesRegister:
 		class: Wame\RouterModule\Model\DefaultRoutesRegister
 
+	# Commands
+	updateDefaultRoutesCommand:
+		class: Wame\RouterModule\Commands\UpdateDefaultRoutesCommand
+		tags: [kdyby.console.command]
 
 doctrine:
 	metadata:

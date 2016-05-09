@@ -2,15 +2,13 @@
 
 namespace Wame\RouterModule\Repositories;
 
-use Doctrine\DBAL\Types\Type,
-	h4kuna\Gettext\GettextSetup,
+use h4kuna\Gettext\GettextSetup,
 	Kdyby\Doctrine\EntityManager,
 	Nette\Application\UI\Presenter,
 	Nette\DI\Container,
 	Nette\Security\User,
 	Wame\Core\Repositories\BaseRepository,
 	Wame\RouterModule\Entities\RouterEntity;
-use function dump;
 
 class RouterRepository extends BaseRepository {
 
@@ -39,6 +37,12 @@ class RouterRepository extends BaseRepository {
 		}
 
 		return $this->routerEntity->findBy($criteria, $orderBy, $limit, $offset);
+	}
+
+	public function create(RouterEntity $entity) {
+		
+		$this->entityManager->persist($entity);
+		$this->entityManager->flush($entity);
 	}
 
 	/**
