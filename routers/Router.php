@@ -3,11 +3,19 @@
 namespace Wame\RouterModule\Routers;
 
 use Nette\Application\Routers\RouteList,
+	Nette\Http\IRequest,
+	Wame\RouterModule\Entities\RouterEntity,
 	Wame\RouterModule\Event\RoutePostprocessEvent,
 	Wame\RouterModule\Event\RoutePreprocessEvent,
 	Wame\RouterModule\Repositories\RouterRepository;
 
 class Router extends RouteList {
+
+	/** @var IRequest */
+	private $httpRequest;
+
+	/** @var RouterEntity */
+	private $activeRoute;
 
 	/**
 	 * Event called before creating route. Function accepts one argument of RoutePreprocessEvent type.
@@ -21,7 +29,8 @@ class Router extends RouteList {
 	 */
 	public $onPostprocess;
 
-	public function __construct(RouterRepository $routerRepository) {
+	public function __construct(RouterRepository $routerRepository, IRequest $httpRequest) {
+		$this->httpRequest = $httpRequest;
 
 		foreach ($routerRepository->find() as $route) {
 
@@ -44,10 +53,19 @@ class Router extends RouteList {
 		}
 	}
 
-	public function match(\Nette\Http\IRequest $httpRequest) {
-		$route = parent::match($httpRequest);
-		\Tracy\Debugger::barDump($route);
-		return $route;
+	/**
+	 * Returns used RouterEntity
+	 * @return RouterEntity
+	 */
+	public function getActiveRoute() {
+		if (!$this->activeRoute) {
+			foreach ($this as $route) {
+				if ($route->match($this->httpRequest) !== NULL) {
+					$this->activeRoute = $route->getRouterEntity();
+				}
+			}
+		}
+		return $this->activeRoute;
 	}
-	
+
 }

@@ -5,9 +5,7 @@ namespace Wame\RouterModule\Filter;
 use Nette\Application\Application,
 	Nette\Application\UI\Presenter,
 	Wame\Core\Entities\BaseEntity,
-	Wame\Core\LinkEvent,
-	Wame\SeoModule\Registers\SlugHandler,
-	Wame\SeoModule\Registers\SlugHandlersRegister;
+	Wame\Core\LinkEvent;
 
 /**
  * @author Dominik Gmiterko <ienze@ienze.me>
@@ -17,19 +15,25 @@ class FilterListener {
 	/** @var \Wame\RouterModule\Registers\FilterHandlersRegister */
 	private $filterHandlersRegister;
 
-	public function __construct(\Wame\RouterModule\Registers\FilterHandlersRegister $filterHandlersRegister, Application $application) {
+	/** @var \Wame\RouterModule\Routers\Router */
+	private $router;
+
+	public function __construct(\Wame\RouterModule\Registers\FilterHandlersRegister $filterHandlersRegister, Application $application, \Wame\RouterModule\Routers\Router $router) {
 		$this->filterHandlersRegister = $filterHandlersRegister;
+		$this->router = $router;
 
 		$application->onPresenter = function($application, $presenter) {
-			$this->serveFilterIn($presenter);
-			$presenter->onLink[] = function($event) use ($presenter) {
-				$this->serveFilterOut($presenter, $event);
-			};
+			if ($presenter instanceof \App\Core\Presenters\BasePresenter) {
+				$this->serveFilterIn($presenter);
+				$presenter->onLink[] = function($event) use ($presenter) {
+					$this->serveFilterOut($presenter, $event);
+				};
+			}
 		};
 	}
 
 	/**
-	 * Convert slug to id on load of presenter
+	 * Use filter by used presenter
 	 * 
 	 * @param Presenter $presenter
 	 */
@@ -43,37 +47,25 @@ class FilterListener {
 				return;
 			}
 
-			$params[$paramName] = $slugHandler->toId($params[$paramName]);
+			$params[$paramName] = $filterHandler->toId($params[$paramName]);
 
 			$presenter->getRequest()->setParameters($params);
 		}
 	}
 
 	/**
-	 * Convert slug to id on load of presenter
+	 * * Use filter by used presenter
 	 * 
 	 * @param Presenter $presenter
+	 * @param LinkEvent $event
 	 */
 	private function serveFilterOut(Presenter $presenter, LinkEvent $event) {
-		$slugHandler = $this->findFilterHandler($presenter);
-		if ($slugHandler) {
-			$paramName = $slugHandler->getParameterName();
+		$filterHandler = $this->findFilterHandler($presenter);
+		if ($filterHandler) {
+			$paramName = $filterHandler->getParameterName();
 			if (array_key_exists($paramName, $event->getArgs())) {
-				$event->getArgs()[$paramName] = $this->paramToSlug($slugHandler, $event->getArgs()[$paramName]);
+				$event->getArgs()[$paramName] = $filterHandler->toSlug($event->getArgs()[$paramName]);
 			}
-		}
-	}
-
-	/**
-	 * 
-	 * @param mixed $param
-	 */
-	private function paramToSlug(SlugHandler $slugHandler, $param) {
-		if (is_object($param) && $param instanceof BaseEntity) {
-			return $slugHandler->entityToSlug($param);
-		}
-		if (is_int($param)) {
-			return $slugHandler->toSlug($param);
 		}
 	}
 
@@ -81,23 +73,20 @@ class FilterListener {
 	 * Finds filter handler for given presenter
 	 * 
 	 * @param Presenter $presenter
-	 * @return SlugHandler|NULL
+	 * @return FilterHandler|NULL
 	 */
 	private function findFilterHandler(Presenter $presenter) {
-		$module = NULL;
-		if (method_exists($presenter, 'getModule')) {
-			$module = $presenter->getModule();
-		}
-
-		//TODO used route?!?
-		
 		/*
-		foreach ($this->slugHandlersRegister as $slugHandler) {
-			if ($slugHandler->match($module, $presenter->getName(), $presenter->getAction())) {
-				return $slugHandler;
-			}
-		}
+		  $activeRoute = $this->router->getActiveRoute();
+		  if($activeRoute) {
+		  $params = $activeRoute->params;
+		  if(isset($params['filter'])) {
+		  $filterClass = $params['filter'];
+		  class_exists($filterClass)
+		  }
+		  }
 		 */
+		return null;
 	}
 
 }
