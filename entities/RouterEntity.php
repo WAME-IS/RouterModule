@@ -48,6 +48,11 @@ class RouterEntity extends BaseEntity {
 	 * @ORM\Column(name="defaults", type="neon", length=512, nullable=true)
 	 */
 	protected $defaults;
+	
+	/**
+	 * @ORM\Column(name="params", type="neon", length=512, nullable=true)
+	 */
+	protected $params;
 
 	/**
 	 * @ORM\Column(name="sort", type="integer", length=4, nullable=false)

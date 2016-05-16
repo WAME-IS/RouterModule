@@ -44,4 +44,10 @@ class Router extends RouteList {
 		}
 	}
 
+	public function match(\Nette\Http\IRequest $httpRequest) {
+		$route = parent::match($httpRequest);
+		\Tracy\Debugger::barDump($route);
+		return $route;
+	}
+	
 }

@@ -20,6 +20,11 @@ services:
 	# Registers
 	defaultRoutesRegister:
 		class: Wame\RouterModule\Model\DefaultRoutesRegister
+	slugHandlersRegister:
+		class: Wame\RouterModule\Registers\FilterHandlersRegister
+
+	# Listener
+	- {class: Wame\RouterModule\Filter\FilterListener, tags: [run]}
 
 	# Commands
 	updateDefaultRoutesCommand:
