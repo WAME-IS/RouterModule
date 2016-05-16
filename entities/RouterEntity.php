@@ -4,7 +4,8 @@ namespace Wame\RouterModule\Entities;
 
 use Doctrine\ORM\Mapping as ORM,
 	Nette\Application\Routers\Route,
-	Wame\Core\Entities\BaseEntity;
+	Wame\Core\Entities\BaseEntity,
+	Wame\RouterModule\Routers\RouterEntityRoute;
 
 /**
  * @ORM\Table(name="wame_router")
@@ -48,7 +49,7 @@ class RouterEntity extends BaseEntity {
 	 * @ORM\Column(name="defaults", type="neon", length=512, nullable=true)
 	 */
 	protected $defaults;
-	
+
 	/**
 	 * @ORM\Column(name="params", type="neon", length=512, nullable=true)
 	 */
@@ -99,7 +100,9 @@ class RouterEntity extends BaseEntity {
 			$data = array_merge($defaults, $data);
 		}
 
-		return new Route($this->route, $data);
+		$route = new RouterEntityRoute($this->route, $data);
+		$route->setRouterEntity($this);
+		return $route;
 	}
 
 }
