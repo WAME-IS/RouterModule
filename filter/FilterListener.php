@@ -52,7 +52,7 @@ class FilterListener {
 
 			$params[$paramName] = $filterHandler->toId($params[$paramName]);
 
-			$presenter->getRequest()->setParameters($params);
+			$request->setParameters($params);
 		}
 	}
 

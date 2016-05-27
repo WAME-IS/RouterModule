@@ -12,11 +12,14 @@ use Nette\Application\Request,
 
 class Router extends RouteList {
 
-	/** @var IRequest */
-	private $httpRequest;
+	/** @var RouterRepository */
+	private $routerRepository;
 
 	/** @var RouterEntity */
 	private $activeRoute;
+
+	/** @var boolean */
+	private $setuped;
 
 	/**
 	 * Event called before creating route. Function accepts one argument of RoutePreprocessEvent type.
@@ -30,10 +33,17 @@ class Router extends RouteList {
 	 */
 	public $onPostprocess = [];
 
-	public function __construct(RouterRepository $routerRepository, IRequest $httpRequest) {
-		$this->httpRequest = $httpRequest;
+	public function __construct(RouterRepository $routerRepository) {
+		$this->routerRepository = $routerRepository;
+	}
 
-		foreach ($routerRepository->find() as $route) {
+	public function setup() {
+		if ($this->setuped) {
+			return;
+		}
+		$this->setuped = true;
+
+		foreach ($this->routerRepository->find() as $route) {
 
 			$routePreprocessEvent = new RoutePreprocessEvent($route);
 			$this->onPreprocess($routePreprocessEvent);
@@ -59,6 +69,8 @@ class Router extends RouteList {
 	 * @return Request|NULL
 	 */
 	public function match(IRequest $httpRequest) {
+		$this->setup();
+
 		foreach ($this as $route) {
 			$appRequest = $route->match($httpRequest);
 			if ($appRequest !== NULL) {
@@ -72,6 +84,7 @@ class Router extends RouteList {
 				return $appRequest;
 			}
 		}
+
 		return NULL;
 	}
 
