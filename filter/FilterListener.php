@@ -2,29 +2,32 @@
 
 namespace Wame\RouterModule\Filter;
 
-use Nette\Application\Application,
+use App\Core\Presenters\BasePresenter,
+	Nette\Application\Application,
 	Nette\Application\UI\Presenter,
-	Wame\Core\Entities\BaseEntity,
-	Wame\Core\LinkEvent;
+	Wame\Core\LinkEvent,
+	Wame\RouterModule\Registers\FilterHandlersRegister,
+	Wame\RouterModule\Routers\Router;
 
 /**
  * @author Dominik Gmiterko <ienze@ienze.me>
  */
 class FilterListener {
 
-	/** @var \Wame\RouterModule\Registers\FilterHandlersRegister */
+	/** @var FilterHandlersRegister */
 	private $filterHandlersRegister;
 
-	/** @var \Wame\RouterModule\Routers\Router */
+	/** @var Router */
 	private $router;
 
-	public function __construct(\Wame\RouterModule\Registers\FilterHandlersRegister $filterHandlersRegister, Application $application, \Wame\RouterModule\Routers\Router $router) {
+	public function __construct(FilterHandlersRegister $filterHandlersRegister, Application $application, Router $router) {
 		$this->filterHandlersRegister = $filterHandlersRegister;
 		$this->router = $router;
 
-		$application->onPresenter = function($application, $presenter) {
-			if ($presenter instanceof \App\Core\Presenters\BasePresenter) {
-				$this->serveFilterIn($presenter);
+		$application->onPresenter[] = function($application, $presenter) {
+			if ($presenter instanceof BasePresenter) {
+				$lastRequest = $application->getRequests()[count($application->getRequests()) - 1];
+				$this->serveFilterIn($presenter, $lastRequest);
 				$presenter->onLink[] = function($event) use ($presenter) {
 					$this->serveFilterOut($presenter, $event);
 				};
@@ -37,11 +40,11 @@ class FilterListener {
 	 * 
 	 * @param Presenter $presenter
 	 */
-	private function serveFilterIn(Presenter $presenter) {
+	private function serveFilterIn(Presenter $presenter, \Nette\Application\Request $request) {
 		$filterHandler = $this->findFilterHandler($presenter);
 		if ($filterHandler) {
-			$paramName = $filterHandler->getParameterInName();
-			$params = $presenter->getRequest()->getParameters();
+			$paramName = $filterHandler->getParameterName();
+			$params = $request->getParameters();
 
 			if (!array_key_exists($paramName, $params)) {
 				return;
@@ -76,16 +79,17 @@ class FilterListener {
 	 * @return FilterHandler|NULL
 	 */
 	private function findFilterHandler(Presenter $presenter) {
-		/*
-		  $activeRoute = $this->router->getActiveRoute();
-		  if($activeRoute) {
-		  $params = $activeRoute->params;
-		  if(isset($params['filter'])) {
-		  $filterClass = $params['filter'];
-		  class_exists($filterClass)
-		  }
-		  }
-		 */
+
+		$activeRoute = $this->router->getActiveRoute();
+
+		if ($activeRoute) {
+			$params = $activeRoute->params;
+			if (isset($params['filter'])) {
+				$filterName = $params['filter'];
+				return $this->filterHandlersRegister->getByName($filterName);
+			}
+		}
+
 		return null;
 	}
 

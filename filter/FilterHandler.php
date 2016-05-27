@@ -8,20 +8,19 @@ namespace Wame\RouterModule\Filter;
 interface FilterHandler {
 
 	/**
+	 * Returns name of filter
+	 * 
+	 * @return string Name of filter
+	 */
+	public function getName();
+	
+	/**
 	 * Converts id to slug
 	 * 
 	 * @param int $id
 	 * @return string Slug
 	 */
 	public function toSlug($id);
-
-	/**
-	 * COnverts enditty to slug
-	 * 
-	 * @param \Wame\Core\Entities\BaseEntity $entity
-	 * @return string Slug
-	 */
-	public function entityToSlug($entity);
 
 	/**
 	 * Converts slug to id
@@ -37,4 +36,12 @@ interface FilterHandler {
 	 * @return string
 	 */
 	public function getParameterName();
+	
+	/**
+	 * Whenever this filter is deterministic or not. Deterministic filters are cached and put into history table.
+	 * 
+	 * @return boolean
+	 */
+	public function isDeterministic();
+	
 }

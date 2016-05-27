@@ -2,7 +2,8 @@
 
 namespace Wame\RouterModule\Routers;
 
-use Nette\Application\Routers\RouteList,
+use Nette\Application\Request,
+	Nette\Application\Routers\RouteList,
 	Nette\Http\IRequest,
 	Wame\RouterModule\Entities\RouterEntity,
 	Wame\RouterModule\Event\RoutePostprocessEvent,
@@ -21,13 +22,13 @@ class Router extends RouteList {
 	 * Event called before creating route. Function accepts one argument of RoutePreprocessEvent type.
 	 * @var array
 	 */
-	public $onPreprocess;
+	public $onPreprocess = [];
 
 	/**
 	 * Event called after creating route. Function accepts one argument of RoutePreprocessEvent type.
 	 * @var array
 	 */
-	public $onPostprocess;
+	public $onPostprocess = [];
 
 	public function __construct(RouterRepository $routerRepository, IRequest $httpRequest) {
 		$this->httpRequest = $httpRequest;
@@ -54,17 +55,31 @@ class Router extends RouteList {
 	}
 
 	/**
+	 * Maps HTTP request to a Request object.
+	 * @return Request|NULL
+	 */
+	public function match(IRequest $httpRequest) {
+		foreach ($this as $route) {
+			$appRequest = $route->match($httpRequest);
+			if ($appRequest !== NULL) {
+				$name = $appRequest->getPresenterName();
+				if (strncmp($name, 'Nette:', 6)) {
+					$appRequest->setPresenterName($this->module . $name);
+				}
+				if ($route instanceof RouterEntityRoute) {
+					$this->activeRoute = $route->getRouterEntity();
+				}
+				return $appRequest;
+			}
+		}
+		return NULL;
+	}
+
+	/**
 	 * Returns used RouterEntity
 	 * @return RouterEntity
 	 */
 	public function getActiveRoute() {
-		if (!$this->activeRoute) {
-			foreach ($this as $route) {
-				if ($route->match($this->httpRequest) !== NULL) {
-					$this->activeRoute = $route->getRouterEntity();
-				}
-			}
-		}
 		return $this->activeRoute;
 	}
 

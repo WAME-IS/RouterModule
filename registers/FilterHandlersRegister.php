@@ -14,4 +14,17 @@ class FilterHandlersRegister extends BaseRegister {
 		parent::__construct(FilterHandler::class);
 	}
 
+	/**
+	 * 
+	 * @param string $name
+	 * @return FilterHandler
+	 */
+	public function getByName($name) {
+		foreach ($this as $entry) {
+			if ($entry->getName() == $name) {
+				return $entry;
+			}
+		}
+	}
+
 }
