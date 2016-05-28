@@ -29,6 +29,8 @@ class FilterListener {
 				$lastRequest = $application->getRequests()[count($application->getRequests()) - 1];
 				$this->serveFilterIn($presenter, $lastRequest);
 				$presenter->onLink[] = function($event) use ($presenter) {
+					dump("onLink");
+					exit();
 					$this->serveFilterOut($presenter, $event);
 				};
 			}
