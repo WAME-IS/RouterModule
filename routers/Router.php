@@ -2,10 +2,8 @@
 
 namespace Wame\RouterModule\Routers;
 
-use Nette\Application\Request,
-	Nette\Application\Routers\RouteList,
+use Nette\Application\Routers\RouteList,
 	Nette\Http\IRequest,
-	Wame\RouterModule\Entities\RouterEntity,
 	Wame\RouterModule\Event\RoutePostprocessEvent,
 	Wame\RouterModule\Event\RoutePreprocessEvent,
 	Wame\RouterModule\Repositories\RouterRepository;
@@ -14,9 +12,6 @@ class Router extends RouteList {
 
 	/** @var RouterRepository */
 	private $routerRepository;
-
-	/** @var RouterEntity */
-	private $activeRoute;
 
 	/** @var boolean */
 	private $setuped;
@@ -44,17 +39,19 @@ class Router extends RouteList {
 		$this->setuped = true;
 
 		foreach ($this->routerRepository->find() as $route) {
-
-			$routePreprocessEvent = new RoutePreprocessEvent($route);
+			
+			$activeRoute = new ActiveRoute($route);
+			
+			$routePreprocessEvent = new RoutePreprocessEvent($activeRoute);
 			$this->onPreprocess($routePreprocessEvent);
-			$route = $routePreprocessEvent->getRoute();
-			if (!$route) {
+			$activeRoute = $routePreprocessEvent->getRoute();
+			if (!$activeRoute) {
 				continue;
 			}
 
-			$netteRoute = $route->createRoute();
+			$activeRoute->createRoute();
 
-			$routePostprocessEvent = new RoutePostprocessEvent($netteRoute);
+			$routePostprocessEvent = new RoutePostprocessEvent($activeRoute);
 			$this->onPostprocess($routePostprocessEvent);
 			if (!$routePostprocessEvent->getRoute()) {
 				continue;
@@ -64,36 +61,9 @@ class Router extends RouteList {
 		}
 	}
 
-	/**
-	 * Maps HTTP request to a Request object.
-	 * @return Request|NULL
-	 */
 	public function match(IRequest $httpRequest) {
 		$this->setup();
-
-		foreach ($this as $route) {
-			$appRequest = $route->match($httpRequest);
-			if ($appRequest !== NULL) {
-				$name = $appRequest->getPresenterName();
-				if (strncmp($name, 'Nette:', 6)) {
-					$appRequest->setPresenterName($this->module . $name);
-				}
-				if ($route instanceof RouterEntityRoute) {
-					$this->activeRoute = $route->getRouterEntity();
-				}
-				return $appRequest;
-			}
-		}
-
-		return NULL;
-	}
-
-	/**
-	 * Returns used RouterEntity
-	 * @return RouterEntity
-	 */
-	public function getActiveRoute() {
-		return $this->activeRoute;
+		return parent::match($httpRequest);
 	}
 
 }

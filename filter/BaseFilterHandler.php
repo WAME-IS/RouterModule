@@ -17,11 +17,11 @@ abstract class BaseFilterHandler extends Object implements FilterHandler {
 		return true;
 	}
 
-	public function toId($slug) {
+	public function filterIn($slug) {
 		return $slug;
 	}
 
-	public function toSlug($id) {
+	public function filterOut($id) {
 		return $id;
 	}
 	

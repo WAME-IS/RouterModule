@@ -15,20 +15,20 @@ interface FilterHandler {
 	public function getName();
 	
 	/**
-	 * Converts id to slug
-	 * 
-	 * @param int $id
-	 * @return string Slug
-	 */
-	public function toSlug($id);
-
-	/**
 	 * Converts slug to id
 	 * 
-	 * @param string $slug
+	 * @param mixed $in
 	 * @return int Id
 	 */
-	public function toId($slug);
+	public function filterIn($in);
+	
+	/**
+	 * Converts id to slug
+	 * 
+	 * @param mixed $out
+	 * @return string Slug
+	 */
+	public function filterOut($out);
 
 	/**
 	 * Name of parameter used for loading slug

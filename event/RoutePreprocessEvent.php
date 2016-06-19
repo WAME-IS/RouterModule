@@ -3,20 +3,20 @@
 namespace Wame\RouterModule\Event;
 
 use Nette\Object,
-	Wame\RouterModule\Entities\RouterEntity;
+	Wame\RouterModule\Routers\ActiveRoute;
 
 /**
  * @author Dominik Gmiterko <ienze@ienze.me>
  * 
- * @method RouterEntity getRoute()
- * @method void setRoute(RouterEntity $route)
+ * @method ActiveRoute getRoute()
+ * @method void setRoute(ActiveRoute $route)
  */
 class RoutePreprocessEvent extends Object {
 
-	/** @var RouterEntity */
+	/** @var ActiveRoute */
 	public $route;
 
-	public function __construct(RouterEntity $route) {
+	public function __construct(ActiveRoute $route) {
 		$this->route = $route;
 	}
 

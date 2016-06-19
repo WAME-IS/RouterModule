@@ -2,11 +2,11 @@
 
 namespace Wame\RouterModule\Filter;
 
-use App\Core\Presenters\BasePresenter,
-	Nette\Application\Application,
-	Nette\Application\UI\Presenter,
-	Wame\Core\LinkEvent,
+use Nette\Application\Routers\Route,
+	Wame\RouterModule\Entities\RouterEntity,
+	Wame\RouterModule\Event\RoutePreprocessEvent,
 	Wame\RouterModule\Registers\FilterHandlersRegister,
+	Wame\RouterModule\Routers\ActiveRoute,
 	Wame\RouterModule\Routers\Router;
 
 /**
@@ -17,82 +17,47 @@ class FilterListener {
 	/** @var FilterHandlersRegister */
 	private $filterHandlersRegister;
 
-	/** @var Router */
-	private $router;
-
-	public function __construct(FilterHandlersRegister $filterHandlersRegister, Application $application, Router $router) {
+	public function __construct(Router $router, FilterHandlersRegister $filterHandlersRegister) {
 		$this->filterHandlersRegister = $filterHandlersRegister;
-		$this->router = $router;
-
-		$application->onPresenter[] = function($application, $presenter) {
-			if ($presenter instanceof BasePresenter) {
-				$lastRequest = $application->getRequests()[count($application->getRequests()) - 1];
-				$this->serveFilterIn($presenter, $lastRequest);
-				$presenter->onLink[] = function($event) use ($presenter) {
-					dump("onLink");
-					exit();
-					$this->serveFilterOut($presenter, $event);
-				};
-			}
+		$router->onPreprocess[] = function(RoutePreprocessEvent $event) {
+			$this->onPreprocess($event->getRoute());
 		};
 	}
 
-	/**
-	 * Use filter by used presenter
-	 * 
-	 * @param Presenter $presenter
-	 */
-	private function serveFilterIn(Presenter $presenter, \Nette\Application\Request $request) {
-		$filterHandler = $this->findFilterHandler($presenter);
-		if ($filterHandler) {
-			$paramName = $filterHandler->getParameterName();
-			$params = $request->getParameters();
-
-			if (!array_key_exists($paramName, $params)) {
-				return;
-			}
-
-			$params[$paramName] = $filterHandler->toId($params[$paramName]);
-
-			$request->setParameters($params);
-		}
-	}
-
-	/**
-	 * * Use filter by used presenter
-	 * 
-	 * @param Presenter $presenter
-	 * @param LinkEvent $event
-	 */
-	private function serveFilterOut(Presenter $presenter, LinkEvent $event) {
-		$filterHandler = $this->findFilterHandler($presenter);
-		if ($filterHandler) {
-			$paramName = $filterHandler->getParameterName();
-			if (array_key_exists($paramName, $event->getArgs())) {
-				$event->getArgs()[$paramName] = $filterHandler->toSlug($event->getArgs()[$paramName]);
+	private function onPreprocess(ActiveRoute $route) {
+		$filters = $this->getFilters($route);
+		if ($filters) {
+			foreach ($filters as $filter) {
+				$defaults = $route->defaults;
+				$defaults[$filter->getParameterName()] = [
+					Route::FILTER_IN => function($in) use ($filter) {
+						return $filter->filterIn($in);
+					},
+					Route::FILTER_OUT => function($out) use ($filter) {
+						return $filter->filterOut($out);
+					},
+				];
+				$route->defaults = $defaults;
 			}
 		}
 	}
 
 	/**
-	 * Finds filter handler for given presenter
 	 * 
-	 * @param Presenter $presenter
-	 * @return FilterHandler|NULL
+	 * @param RouterEntity $route
+	 * @return FilterHandler
 	 */
-	private function findFilterHandler(Presenter $presenter) {
-
-		$activeRoute = $this->router->getActiveRoute();
-
-		if ($activeRoute) {
-			$params = $activeRoute->params;
-			if (isset($params['filter'])) {
-				$filterName = $params['filter'];
-				return $this->filterHandlersRegister->getByName($filterName);
+	private function getFilters(ActiveRoute $route) {
+		if (isset($route->params['filter'])) {
+			if (is_array($route->params['filter'])) {
+				$filterHandlerRegister = $this->filterHandlersRegister;
+				return array_map(function($name) use ($filterHandlerRegister) {
+					return $filterHandlerRegister->getByName($name);
+				}, $route->params['filter']);
+			} else {
+				return [$this->filterHandlersRegister->getByName($route->params['filter'])];
 			}
 		}
-
-		return null;
 	}
 
 }

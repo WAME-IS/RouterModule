@@ -2,21 +2,22 @@
 
 namespace Wame\RouterModule\Event;
 
-use Nette\Application\Routers\Route,
-	Nette\Object;
+use Nette\Object,
+	Wame\RouterModule\Routers\ActiveRoute;
 
 /**
  * @author Dominik Gmiterko <ienze@ienze.me>
  * 
- * @method Route getRoute()
- * @method void setRoute(Route $route)
+ * @method ActiveRoute getRoute()
+ * @method void setRoute(ActiveRoute $route)
  */
 class RoutePostprocessEvent extends Object {
 
-	/** @var Route */
+	/** @var ActiveRoute */
 	public $route;
 
-	public function __construct(Route $route) {
+	public function __construct(ActiveRoute $route) {
 		$this->route = $route;
 	}
+
 }

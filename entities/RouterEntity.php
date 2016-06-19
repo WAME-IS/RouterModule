@@ -70,39 +70,4 @@ class RouterEntity extends BaseEntity {
 	 */
 	protected $status;
 
-	function getDefault($name) {
-		if (array_key_exists($name, $this->defaults)) {
-			return $this->defaults[$name];
-		}
-	}
-
-	function setDefault($name, $value) {
-		$this->defaults[$name] = $value;
-	}
-
-	/**
-	 * 
-	 * @return Route
-	 */
-	public function createRoute() {
-		$data = [
-			'presenter' => $this->presenter,
-			'action' => $this->action
-		];
-
-		if ($this->module) {
-			$data['module'] = $this->module;
-		}
-
-		$defaults = $this->defaults;
-
-		if (is_array($defaults)) {
-			$data = array_merge($defaults, $data);
-		}
-
-		$route = new RouterEntityRoute($this->route, $data);
-		$route->setRouterEntity($this);
-		return $route;
-	}
-
 }
