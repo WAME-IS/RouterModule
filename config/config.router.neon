@@ -1,4 +1,7 @@
 services:
+	router:
+		class: Wame\RouterModule\Routers\Router
+
 	PermissionObject:
 		setup:
 			- addResource('router')
@@ -11,14 +14,23 @@ services:
 			- addResourceAction('router', 'delete')
 			- allow('admin', 'router', 'delete')
 
-	# Entities
-	- Wame\RouterModule\Entities\RouterEntity
-
 	# Repositories
 	- Wame\RouterModule\Repositories\RouterRepository
 
+	# Registers
+	defaultRoutesRegister:
+		class: Wame\RouterModule\Model\DefaultRoutesRegister
+	slugHandlersRegister:
+		class: Wame\RouterModule\Registers\FilterHandlersRegister
+
+	# Listener
+	- {class: Wame\RouterModule\Filter\FilterListener, tags: [run]}
+
+	# Commands
+	updateDefaultRoutesCommand:
+		class: Wame\RouterModule\Commands\UpdateDefaultRoutesCommand
+		tags: [kdyby.console.command]
 
 doctrine:
 	metadata:
 		Wame\RouterModule\Entities: %appDir%/../vendor/wame/RouterModule/entities
-		Wame\RouterModule\Repositories: %appDir%/../vendor/wame/RouterModule/repositories
