@@ -15,13 +15,8 @@ class RouterRepository extends BaseRepository {
 	const STATUS_DISABLED = 0;
 	const STATUS_ENABLED = 1;
 
-	/** @var RouterEntity */
-	private $routerEntity;
-
 	public function __construct(Container $container, EntityManager $entityManager, GettextSetup $translator, User $user) {
-		parent::__construct($container, $entityManager, $translator, $user);
-
-		$this->routerEntity = $entityManager->getRepository(RouterEntity::class);
+		parent::__construct($container, $entityManager, $translator, $user, RouterEntity::class);
 	}
 
 	/**
@@ -36,7 +31,7 @@ class RouterRepository extends BaseRepository {
 			$orderBy = ['sort' => 'desc'];
 		}
 
-		return $this->routerEntity->findBy($criteria, $orderBy, $limit, $offset);
+		return parent::find($criteria, $orderBy, $limit, $offset);
 	}
 
 	public function create(RouterEntity $entity) {
