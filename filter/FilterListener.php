@@ -45,7 +45,7 @@ class FilterListener {
 	/**
 	 * 
 	 * @param RouterEntity $route
-	 * @return FilterHandler
+	 * @return IFilterHandler
 	 */
 	private function getFilters(ActiveRoute $route) {
 		if (isset($route->params['filter'])) {

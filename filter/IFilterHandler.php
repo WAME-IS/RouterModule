@@ -5,7 +5,7 @@ namespace Wame\RouterModule\Filter;
 /**
  * @author Dominik Gmiterko <ienze@ienze.me>
  */
-interface FilterHandler {
+interface IFilterHandler {
 
 	/**
 	 * Returns name of filter

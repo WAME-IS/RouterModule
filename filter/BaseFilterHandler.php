@@ -7,7 +7,7 @@ use Nette\Object;
 /**
  * @author Dominik Gmiterko <ienze@ienze.me>
  */
-abstract class BaseFilterHandler extends Object implements FilterHandler {
+abstract class BaseFilterHandler extends Object implements IFilterHandler {
 
 	public function getParameterName() {
 		return "id";

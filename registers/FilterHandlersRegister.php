@@ -2,8 +2,8 @@
 
 namespace Wame\RouterModule\Registers;
 
-use Wame\Core\Registers\BaseRegister,
-	Wame\RouterModule\Filter\FilterHandler;
+use Wame\Core\Registers\BaseRegister;
+use Wame\RouterModule\Filter\IFilterHandler;
 
 /**
  * @author Dominik Gmiterko <ienze@ienze.me>
@@ -11,20 +11,7 @@ use Wame\Core\Registers\BaseRegister,
 class FilterHandlersRegister extends BaseRegister {
 
 	public function __construct() {
-		parent::__construct(FilterHandler::class);
-	}
-
-	/**
-	 * 
-	 * @param string $name
-	 * @return FilterHandler
-	 */
-	public function getByName($name) {
-		foreach ($this as $entry) {
-			if ($entry->getName() == $name) {
-				return $entry;
-			}
-		}
+		parent::__construct(IFilterHandler::class);
 	}
 
 }
