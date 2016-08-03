@@ -1,0 +1,9 @@
+{block content}
+	<h1>{$siteTitle}</h1>
+
+	{if count($routerEntity) == 0}
+		<div class="lead text-muted">{_'You do not have define any routes.'}</div>
+		<a class="btn btn-success" n:href=":Admin:Router:, 'id' => null">{_'Create first route'}</a>
+	{else}
+        {control routerGrid}
+	{/if}
