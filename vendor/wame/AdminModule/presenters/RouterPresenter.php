@@ -6,6 +6,7 @@ use Wame\RouterModule\Entities\RouterEntity;
 use Wame\RouterModule\Repositories\RouterRepository;
 use Wame\RouterModule\Vendor\Wame\AdminModule\Grids\RouterGrid;
 use Wame\DataGridControl\IDataGridControlFactory;
+use Wame\RouterModule\Vendor\Wame\AdminModule\Forms\RouterForm;
 
 class RouterPresenter extends BasePresenter
 {	
@@ -20,6 +21,9 @@ class RouterPresenter extends BasePresenter
     
     /** @var RouterGrid @inject */
 	public $routerGrid;
+    
+    /** @var RouterForm @inject */
+	public $routerForm;
     
     
     
@@ -58,6 +62,23 @@ class RouterPresenter extends BasePresenter
         
     }
     
+    public function handleSort($item_id, $prev_id, $next_id)
+    {
+//        $item = $this->routerRepository->get(['id' => $item_id]);
+//        $this->routerRepository->moveAfter($item, $prev_id);
+//        
+//        $this->flashMessage(
+//            "Id: $item_id, Previous id: $prev_id, Next id: $next_id",
+//            'success'
+//        );
+        
+        if ($this->isAjax()) {
+            $this->redrawControl('flashes');
+        } else {
+            $this->redirect('this');
+        }
+    }
+    
     
     
     /** renders ***************************************************************/
@@ -86,6 +107,14 @@ class RouterPresenter extends BasePresenter
     
     /** components ************************************************************/
     
+    protected function createComponentRouterForm()
+	{
+        $form = $this->routerForm->setId($this->id)->build();
+		
+		return $form;
+	}
+    
+    
     /**
 	 * Create role grid component
 	 * @param type $name
@@ -97,6 +126,7 @@ class RouterPresenter extends BasePresenter
 		$grid = $this->gridControl->create();
 		$grid->setDataSource($qb);
 		$grid->setProvider($this->routerGrid);
+        $grid->setSortable();
 		
 		return $grid;
 	}

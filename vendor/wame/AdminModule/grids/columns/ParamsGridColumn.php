@@ -4,10 +4,10 @@ namespace Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns;
 
 use Wame\DataGridControl\BaseGridColumn;
 
-class DefaultsGridColumn extends BaseGridColumn
+class ParamsGridColumn extends BaseGridColumn
 {
 	public function addColumn($grid) {
-		$grid->addColumnText('defaults', _('Defaults'))
+		$grid->addColumnText('params', _('Params'))
                 ->setRenderer(function($item) {
                     return json_encode($item->params);
                 });

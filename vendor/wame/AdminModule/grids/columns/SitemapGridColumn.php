@@ -2,7 +2,9 @@
 
 namespace Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns;
 
-class StatusGridColumn extends BaseGridColumn
+use Wame\DataGridControl\BaseGridColumn;
+
+class SitemapGridColumn extends BaseGridColumn
 {
     private $grid;
     
@@ -11,22 +13,21 @@ class StatusGridColumn extends BaseGridColumn
     {
         $this->grid = $grid;
         
-		$grid->addColumnStatus('status', _('Status'))
-				->setTemplate(__DIR__ . '/../templates/column_status.latte')
-				->addOption(1, _('Published'))
+		$grid->addColumnStatus('sitemap', _('Sitemap'))
+				->addOption(1, _('Yes'))
 					->setIcon('check')
 					->setClass('btn-success')
 					->endOption()
-				->addOption(2, _('Unpublished'))
+				->addOption(0, _('No'))
 					->setIcon('close')
 					->setClass('btn-danger')
 					->endOption()
-				->onChange[] = [$this, 'statusChange'];
+				->onChange[] = [$this, 'sitemapChange'];
 		
 		return $grid;
 	}
 	
-	public function statusChange($id, $new_status)
+	public function sitemapChange($id, $new_status)
 	{
         if($this->grid->getDataSource() instanceof \Doctrine\ORM\QueryBuilder) {
             $query = $this->grid->getDataSource();

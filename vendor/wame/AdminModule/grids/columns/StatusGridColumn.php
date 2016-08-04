@@ -2,6 +2,8 @@
 
 namespace Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns;
 
+use Wame\DataGridControl\BaseGridColumn;
+
 class StatusGridColumn extends BaseGridColumn
 {
     private $grid;
@@ -12,12 +14,11 @@ class StatusGridColumn extends BaseGridColumn
         $this->grid = $grid;
         
 		$grid->addColumnStatus('status', _('Status'))
-				->setTemplate(__DIR__ . '/../templates/column_status.latte')
-				->addOption(1, _('Published'))
+				->addOption(1, _('Enabled'))
 					->setIcon('check')
 					->setClass('btn-success')
 					->endOption()
-				->addOption(2, _('Unpublished'))
+				->addOption(0, _('Disabled'))
 					->setIcon('close')
 					->setClass('btn-danger')
 					->endOption()
