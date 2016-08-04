@@ -42,7 +42,7 @@ class Router extends RouteList
         }
         $this->setuped = true;
 
-        foreach ($this->routerRepository->find() as $route) {
+        foreach ($this->routerRepository->find([], ['sort' => 'DESC']) as $route) {
 
             $activeRoute = new ActiveRoute($route);
 
