@@ -2,8 +2,9 @@
 
 namespace Wame\RouterModule\Routers;
 
-use Nette\Application\Routers\Route,
-	Wame\RouterModule\Entities\RouterEntity;
+use Nette\Application\Routers\Route;
+use Nette\Http\IRequest;
+use Wame\RouterModule\Entities\RouterEntity;
 
 /**
  * @author Dominik Gmiterko <ienze@ienze.me>
@@ -51,4 +52,18 @@ class ActiveRoute extends Route {
 		parent::__construct($this->route, $metadata);
 	}
 
+    public function match(IRequest $httpRequest)
+    {
+        $request = parent::match($httpRequest);
+        if($request) {
+            $activeRequest = new ActiveRequest($request->getPresenterName(), $request->getMethod(), $request->getParameters(), $request->getPost(), $request->getFiles());
+            //copy flags
+            foreach([\Nette\Application\Request::RESTORED, \Nette\Application\Request::SECURED] as $flag) {
+                $activeRequest->setFlag($flag, $request->hasFlag($flag));
+            }
+            //set router entity
+            $activeRequest->setRouterEntity($this->routerEntity);
+            return $activeRequest;
+        }
+    }
 }
