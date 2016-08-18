@@ -123,12 +123,24 @@ class RouterPresenter extends BasePresenter
 	protected function createComponentRouterGrid()
 	{
         $qb = $this->routerRepository->createQueryBuilder('a');
+        $qb->andWhere($qb->expr()->isNull('a.parent'));
+        
 		$grid = $this->gridControl->create();
 		$grid->setDataSource($qb);
 		$grid->setProvider($this->routerGrid);
         $grid->setSortable();
+        
+        $grid->setTreeView([$this, 'getChildren'], 'children');
 		
 		return $grid;
 	}
+    
+    public function getChildren($item)
+    {
+        $qb = $this->routerRepository->createQueryBuilder('a');
+        $qb->andWhere($qb->expr()->eq('a.parent', ':parent'))->setParameter('parent', $item);
+        
+        return $qb;
+    }
 
 }

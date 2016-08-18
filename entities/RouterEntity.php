@@ -69,5 +69,16 @@ class RouterEntity extends BaseEntity {
 	 * @ORM\Column(name="status", type="integer", length=1, nullable=false)
 	 */
 	protected $status;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="RouterEntity", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     */
+	protected $parent;
 
+    /**
+     * @ORM\OneToMany(targetEntity="RouterEntity", mappedBy="parent")
+     */
+	protected $children;
+    
 }
