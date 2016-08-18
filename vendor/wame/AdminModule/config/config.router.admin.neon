@@ -2,7 +2,7 @@ services:
     RouterGrid:
         class: Wame\RouterModule\Vendor\Wame\AdminModule\Grids\RouterGrid
         setup:
-            - addColumn(Wame\DataGridControl\IdGridColumn())
+#            - addColumn(Wame\DataGridControl\IdGridColumn())
             - addColumn(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\RouteGridColumn())
             - addColumn(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\LangGridColumn())
             - addColumn(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\ModuleGridColumn())
