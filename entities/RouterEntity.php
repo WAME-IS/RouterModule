@@ -58,17 +58,17 @@ class RouterEntity extends BaseEntity {
 	/**
 	 * @ORM\Column(name="sort", type="integer", length=4, nullable=false)
 	 */
-	protected $sort;
+	protected $sort = 0;
 
 	/**
 	 * @ORM\Column(name="sitemap", type="integer", length=1, nullable=false)
 	 */
-	protected $sitemap;
+	protected $sitemap = 1;
 
 	/**
 	 * @ORM\Column(name="status", type="integer", length=1, nullable=false)
 	 */
-	protected $status;
+	protected $status = 1;
     
     /**
      * @ORM\ManyToOne(targetEntity="RouterEntity", inversedBy="children")

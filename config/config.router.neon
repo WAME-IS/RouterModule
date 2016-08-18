@@ -31,6 +31,9 @@ services:
 		class: Wame\RouterModule\Commands\UpdateDefaultRoutesCommand
 		tags: [kdyby.console.command]
 
+extensions:
+	router: Wame\RouterModule\DI\Extension
+
 doctrine:
 	metadata:
 		Wame\RouterModule\Entities: %appDir%/../vendor/wame/RouterModule/entities
