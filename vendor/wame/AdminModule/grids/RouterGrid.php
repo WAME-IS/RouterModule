@@ -2,7 +2,7 @@
 
 namespace Wame\RouterModule\Vendor\Wame\AdminModule\Grids;
 
-class RouterGrid extends \Wame\DataGridControl\GridProvider
+class RouterGrid extends \Wame\DataGridControl\DataGridControl
 {
 	
 }

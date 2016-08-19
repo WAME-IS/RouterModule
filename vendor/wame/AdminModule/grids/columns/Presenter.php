@@ -2,11 +2,13 @@
 
 namespace Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns;
 
-use Wame\DataGridControl\BaseGridColumn;
+use Wame\DataGridControl\BaseGridItem;
 
-class PresenterGridColumn extends BaseGridColumn
+class Presenter extends BaseGridItem
 {
-	public function addColumn($grid) {
+	/** {@inheritDoc} */
+	public function render($grid)
+    {
 		$grid->addColumnText('presenter', _('Presenter'))
                 ->setSortable()
 				->setFilterText();

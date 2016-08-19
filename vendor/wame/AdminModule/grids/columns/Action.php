@@ -2,11 +2,13 @@
 
 namespace Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns;
 
-use Wame\DataGridControl\BaseGridColumn;
+use Wame\DataGridControl\BaseGridItem;
 
-class ActionGridColumn extends BaseGridColumn
+class Action extends BaseGridItem
 {
-	public function addColumn($grid) {
+	/** {@inheritDoc} */
+	public function render($grid)
+    {
 		$grid->addColumnText('action', _('Action'))
                 ->setSortable()
 				->setFilterText();

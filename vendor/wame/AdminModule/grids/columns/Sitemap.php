@@ -2,14 +2,16 @@
 
 namespace Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns;
 
-use Wame\DataGridControl\BaseGridColumn;
+use Wame\DataGridControl\BaseGridItem;
 
-class SitemapGridColumn extends BaseGridColumn
+class Sitemap extends BaseGridItem
 {
+    /** @var DataGridControl */
     private $grid;
     
     
-	public function addColumn($grid)
+	/** {@inheritDoc} */
+	public function render($grid)
     {
         $this->grid = $grid;
         
@@ -27,7 +29,13 @@ class SitemapGridColumn extends BaseGridColumn
 		return $grid;
 	}
 	
-	public function sitemapChange($id, $new_status)
+    /**
+     * Callback
+     * 
+     * @param integer $id           ID
+     * @param integer $newStatus    new status
+     */
+	public function sitemapChange($id, $newStatus)
 	{
         if($this->grid->getDataSource() instanceof \Doctrine\ORM\QueryBuilder) {
             $query = $this->grid->getDataSource();
@@ -36,7 +44,7 @@ class SitemapGridColumn extends BaseGridColumn
                     ->setParameter('id', $id)
                     ->getQuery()->getSingleResult();
             
-            $item->status = $new_status;
+            $item->status = $newStatus;
             
             if ($this->grid->presenter->isAjax()) {
                 $this->grid->redrawItem($id);

@@ -5,19 +5,12 @@ namespace App\AdminModule\Presenters;
 use Wame\RouterModule\Entities\RouterEntity;
 use Wame\RouterModule\Repositories\RouterRepository;
 use Wame\RouterModule\Vendor\Wame\AdminModule\Grids\RouterGrid;
-use Wame\DataGridControl\IDataGridControlFactory;
 use Wame\RouterModule\Vendor\Wame\AdminModule\Forms\RouterForm;
 
 class RouterPresenter extends BasePresenter
 {	
     /** @var RouterRepository @inject */
 	public $routerRepository;
-    
-	/** @var RouterEntity */
-	private $routerEntity;
-    
-    /** @var IDataGridControlFactory @inject */
-	public $gridControl;
     
     /** @var RouterGrid @inject */
 	public $routerGrid;
@@ -26,8 +19,6 @@ class RouterPresenter extends BasePresenter
 	public $routerForm;
     
     
-    
-	
 	public function startup() 
 	{
 		parent::startup();
@@ -36,8 +27,6 @@ class RouterPresenter extends BasePresenter
 			$this->flashMessage(_('To enter this section you have sufficient privileges.'), 'danger');
 			$this->redirect('parent');
 		}
-		
-		$this->routerEntity = $this->entityManager->getRepository(RouterEntity::class);
 	}
     
     
@@ -86,7 +75,7 @@ class RouterPresenter extends BasePresenter
 	public function renderDefault()
 	{
 		$this->template->siteTitle = _('Routes');
-		$this->template->routerEntity = $this->routerEntity->findBy(['status' => RouterRepository::STATUS_ENABLED]);
+		$this->template->routerEntity = $this->routerRepository->find();
 	}
     
     public function renderEdit()
@@ -107,6 +96,11 @@ class RouterPresenter extends BasePresenter
     
     /** components ************************************************************/
     
+    /**
+     * Router form component
+     * 
+     * @return RouterForm
+     */
     protected function createComponentRouterForm()
 	{
         $form = $this->routerForm->setId($this->id)->build();
@@ -116,23 +110,20 @@ class RouterPresenter extends BasePresenter
     
     
     /**
-	 * Create role grid component
-	 * @param type $name
-	 * @return type
+	 * Create router grid component
+     * 
+	 * @return RouterGrid
 	 */
 	protected function createComponentRouterGrid()
 	{
         $qb = $this->routerRepository->createQueryBuilder('a');
         $qb->andWhere($qb->expr()->isNull('a.parent'));
         
-		$grid = $this->gridControl->create();
-		$grid->setDataSource($qb);
-		$grid->setProvider($this->routerGrid);
-        $grid->setSortable();
-        
-        $grid->setTreeView([$this, 'getChildren'], 'children');
+		$this->routerGrid->setDataSource($qb);
+        $this->routerGrid->setSortable();
+        $this->routerGrid->setTreeView([$this, 'getChildren'], 'children');
 		
-		return $grid;
+		return $this->routerGrid;
 	}
     
     public function getChildren($item)

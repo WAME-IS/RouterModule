@@ -2,11 +2,13 @@
 
 namespace Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns;
 
-use Wame\DataGridControl\BaseGridColumn;
+use Wame\DataGridControl\BaseGridItem;
 
-class RouteGridColumn extends BaseGridColumn
+class Route extends BaseGridItem
 {
-	public function addColumn($grid) {
+	/** {@inheritDoc} */
+	public function render($grid)
+    {
 		$grid->addColumnText('route', _('Route'))
                 ->setEditableCallback([$this, 'columnEdited'])
                 ->setSortable()
@@ -15,6 +17,12 @@ class RouteGridColumn extends BaseGridColumn
 		return $grid;
 	}
     
+    /**
+     * Callback
+     * 
+     * @param integer $id       ID
+     * @param string $value     new value
+     */
     public function columnEdited($id, $value)
     {
         echo("Id: $id, new value: $value"); die;

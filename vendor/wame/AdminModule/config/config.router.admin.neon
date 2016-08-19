@@ -2,20 +2,15 @@ services:
     RouterGrid:
         class: Wame\RouterModule\Vendor\Wame\AdminModule\Grids\RouterGrid
         setup:
-#            - addColumn(Wame\DataGridControl\IdGridColumn())
-            - addColumn(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\RouteGridColumn())
-            - addColumn(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\LangGridColumn())
-            - addColumn(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\ModuleGridColumn())
-            - addColumn(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\PresenterGridColumn())
-            - addColumn(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\ActionGridColumn())
-            - addColumn(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\DefaultsGridColumn())
-#            - addColumn(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\SortGridColumn())
-            - addColumn(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\SitemapGridColumn())
-            - addColumn(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\StatusGridColumn())
-            - addColumn(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\ParamsGridColumn())
-
-            - addColumn(Wame\DataGridControl\EditGridAction())
-            - addColumn(Wame\DataGridControl\DeleteGridAction())
-            - addColumn(Wame\DataGridControl\AddGridToolbarButton())
-
-#            - addColumn(Wame\PermissionModule\Vendor\Wame\AdminModule\Grids\Columns\AddGridToolbarButton())
+            - add(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\Route())
+            - add(Wame\DataGridControl\Columns\Lang())
+            - add(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\Module())
+            - add(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\Presenter())
+            - add(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\Action())
+            - add(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\Defaults())
+            - add(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\Sitemap())
+            - add(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\Status())
+            - add(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\Params())
+            - add(Wame\DataGridControl\Actions\Edit())
+            - add(Wame\DataGridControl\Actions\Delete())
+            - add(Wame\DataGridControl\ToolbarButtons\Add())
