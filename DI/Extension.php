@@ -29,14 +29,14 @@ class Extension extends CompilerExtension
                         '$routerEntity->setModule(?);' .
                         '$routerEntity->setPresenter(?);' .
                         '$routerEntity->setAction(?);' .
-                        '$service->add($routerEntity);', $route, $presenterName[0], $presenterName[1], $presenterName[2]
+                        '$service->add($routerEntity, ?)', $route, $presenterName[0], $presenterName[1], $presenterName[2], $route
                 );
             } elseif (is_array($param)) {
-                $parts = ['$routerEntity = new \Wame\RouterModule\Entities\RouterEntity();'];
+                $parts = ['$routerEntity = new \Wame\RouterModule\Entities\RouterEntity()', Helpers::format('$routerEntity->setRoute(?)', $route)];
                 foreach ($param as $key => $value) {
                     $parts[] = Helpers::format('$routerEntity->? = ?', $key, $value);
                 }
-                $parts[] = '$service->add($routerEntity);';
+                $parts[] = Helpers::format('$service->add($routerEntity, ?)', $route);
                 $lines[] = implode(";", $parts);
             }
         }
