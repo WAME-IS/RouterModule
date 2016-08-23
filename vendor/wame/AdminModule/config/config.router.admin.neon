@@ -2,7 +2,7 @@ services:
     RouterGrid:
         class: Wame\RouterModule\Vendor\Wame\AdminModule\Grids\RouterGrid
         setup:
-            - add(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\Route())
+            - add(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\Route(), null, {priority: 99})
             - add(Wame\DataGridControl\Columns\Lang())
             - add(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\Module())
             - add(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\Presenter())

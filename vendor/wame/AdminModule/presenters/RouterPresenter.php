@@ -55,11 +55,11 @@ class RouterPresenter extends BasePresenter
     {
 //        $item = $this->routerRepository->get(['id' => $item_id]);
 //        $this->routerRepository->moveAfter($item, $prev_id);
-//        
-//        $this->flashMessage(
-//            "Id: $item_id, Previous id: $prev_id, Next id: $next_id",
-//            'success'
-//        );
+        
+        $this->flashMessage(
+            "Id: $item_id, Previous id: $prev_id, Next id: $next_id",
+            'success'
+        );
         
         if ($this->isAjax()) {
             $this->redrawControl('flashes');
