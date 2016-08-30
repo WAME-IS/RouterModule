@@ -56,6 +56,7 @@ class FilterListener
     private function getFilters(ActiveRoute $route)
     {
         if (isset($route->params['filter'])) {
+            \Tracy\Debugger::barDump($route->params['filter']);
             if (is_array($route->params['filter'])) {
                 $filterHandlerRegister = $this->filterHandlersRegister;
                 return array_map(function($name) use ($filterHandlerRegister) {
