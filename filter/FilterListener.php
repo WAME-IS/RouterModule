@@ -2,35 +2,37 @@
 
 namespace Wame\RouterModule\Filter;
 
-use Nette\Application\Routers\Route,
-    Wame\RouterModule\Entities\RouterEntity,
-    Wame\RouterModule\Event\RoutePreprocessEvent,
-    Wame\RouterModule\Registers\FilterHandlersRegister,
-    Wame\RouterModule\Routers\ActiveRoute,
-    Wame\RouterModule\Routers\Router;
+use Kdyby\Events\Subscriber;
+use Wame\RouterModule\Entities\RouterEntity;
+use Wame\RouterModule\Event\RoutePreprocessEvent;
+use Wame\RouterModule\Filter\IFilterHandler;
+use Wame\RouterModule\Registers\FilterHandlersRegister;
+use Wame\RouterModule\Routers\ActiveRoute;
+use WebLoader\InvalidArgumentException;
+use Nette\Application\Routers\Route;
 
 /**
  * @author Dominik Gmiterko <ienze@ienze.me>
  */
-class FilterListener
+class FilterListener implements Subscriber
 {
 
     /** @var FilterHandlersRegister */
     private $filterHandlersRegister;
 
-    public function __construct(\Nette\DI\Container $container, FilterHandlersRegister $filterHandlersRegister)
+    public function __construct(FilterHandlersRegister $filterHandlersRegister)
     {
-        $router = $container->getByType(Router::class, false);
-        if ($router) {
-            $this->filterHandlersRegister = $filterHandlersRegister;
-            $router->onPreprocess[] = function(RoutePreprocessEvent $event) {
-                $this->onPreprocess($event->getRoute());
-            };
-        }
+        $this->filterHandlersRegister = $filterHandlersRegister;
     }
 
-    private function onPreprocess(ActiveRoute $route)
+    public function getSubscribedEvents()
     {
+        return ['Wame\RouterModule\Routers\Router::onPreprocess'];
+    }
+
+    public function onPreprocess(RoutePreprocessEvent $event)
+    {
+        $route = $event->getRoute();
         $filters = $this->getFilters($route);
         if ($filters) {
             foreach ($filters as $filter) {
@@ -56,14 +58,22 @@ class FilterListener
     private function getFilters(ActiveRoute $route)
     {
         if (isset($route->params['filter'])) {
-            \Tracy\Debugger::barDump($route->params['filter']);
             if (is_array($route->params['filter'])) {
                 $filterHandlerRegister = $this->filterHandlersRegister;
                 return array_map(function($name) use ($filterHandlerRegister) {
-                    return $filterHandlerRegister->getByName($name);
+                    $filter = $filterHandlerRegister->getByName($name);
+                    if (!$filter) {
+                        throw new InvalidArgumentException("Invalid route filter name $name");
+                    }
+                    return $filter;
                 }, $route->params['filter']);
             } else {
-                return [$this->filterHandlersRegister->getByName($route->params['filter'])];
+                $name = $route->params['filter'];
+                $filter = $this->filterHandlersRegister->getByName($name);
+                if (!$filter) {
+                    throw new InvalidArgumentException("Invalid route filter name $name");
+                }
+                return [$filter];
             }
         }
     }

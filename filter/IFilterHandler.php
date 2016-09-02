@@ -6,13 +6,6 @@ namespace Wame\RouterModule\Filter;
  * @author Dominik Gmiterko <ienze@ienze.me>
  */
 interface IFilterHandler {
-
-	/**
-	 * Returns name of filter
-	 * 
-	 * @return string Name of filter
-	 */
-	public function getName();
 	
 	/**
 	 * Converts slug to id

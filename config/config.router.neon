@@ -24,7 +24,7 @@ services:
 		class: Wame\RouterModule\Registers\FilterHandlersRegister
 
 	# Listener
-	- {class: Wame\RouterModule\Filter\FilterListener, tags: [run]}
+	- {class: Wame\RouterModule\Filter\FilterListener, tags: [kdyby.subscriber]}
 
 	# Commands
 	updateDefaultRoutesCommand:
