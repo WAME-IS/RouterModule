@@ -2,23 +2,22 @@
 
 namespace Wame\RouterModule\Repositories;
 
-use h4kuna\Gettext\GettextSetup,
-	Kdyby\Doctrine\EntityManager,
-	Nette\Application\UI\Presenter,
-	Nette\DI\Container,
-	Nette\Security\User,
+use Nette\Application\UI\Presenter,
 	Wame\Core\Repositories\BaseRepository,
 	Wame\RouterModule\Entities\RouterEntity;
 
-class RouterRepository extends BaseRepository {
-
+class RouterRepository extends BaseRepository
+{
 	const STATUS_DISABLED = 0;
 	const STATUS_ENABLED = 1;
-
-	public function __construct(Container $container, EntityManager $entityManager, GettextSetup $translator, User $user) {
-		parent::__construct($container, $entityManager, $translator, $user, RouterEntity::class);
+    
+    
+	public function __construct()
+    {
+		parent::__construct(RouterEntity::class);
 	}
 
+    
 	/**
 	 * Find all routes by criteria
 	 * 

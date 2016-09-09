@@ -32,12 +32,17 @@ class RouterPresenter extends BasePresenter
     
     /** actions ***************************************************************/
     
-    
+    /**
+     * Action edit
+     */
     public function actionEdit()
     {
         
     }
     
+    /**
+     * Action create
+     */
     public function actionCreate()
     {
         
@@ -46,18 +51,34 @@ class RouterPresenter extends BasePresenter
     
     /** handles ***************************************************************/
     
+    /**
+     * Handle delete
+     */
     public function handleDelete()
     {
         
     }
     
-    public function handleSort($item_id, $prev_id, $next_id)
+    /**
+     * Handle sort
+     * 
+     * @param integer $item_id      item id
+     * @param integer $prev_id      prev id
+     * @param integer $next_id      next id
+     * @param integer $parent_id    parent id
+     */
+    public function handleSort($item_id, $prev_id, $next_id, $parent_id)
     {
+        $item = $this->routerRepository->get(['id' => $item_id]);
+        $parent = $this->routerRepository->get(['id' => $item_id]);
+        
+        $item->parent = $parent;
+        
 //        $item = $this->routerRepository->get(['id' => $item_id]);
 //        $this->routerRepository->moveAfter($item, $prev_id);
         
         $this->flashMessage(
-            "Id: $item_id, Previous id: $prev_id, Next id: $next_id",
+            "Id: $item_id, Previous id: $prev_id, Next id: $next_id, Parent id: $parent_id",
             'success'
         );
         

@@ -11,7 +11,6 @@ use Wame\RouterModule\Routers\ActiveRoute;
 
 class Router extends RouteList
 {
-
     /** @var RouterRepository */
     private $routerRepository;
 
@@ -30,18 +29,21 @@ class Router extends RouteList
      */
     public $onPostprocess = [];
 
+    
     public function __construct(RouterRepository $routerRepository)
     {
         $this->routerRepository = $routerRepository;
     }
 
+    
     public function setup()
     {
         if ($this->setuped) {
             return;
         }
+        
         $this->setuped = true;
-
+        
         foreach ($this->routerRepository->find([], ['sort' => 'DESC']) as $route) {
 
             $activeRoute = new ActiveRoute($route);
@@ -70,4 +72,5 @@ class Router extends RouteList
         $this->setup();
         return parent::match($httpRequest);
     }
+    
 }
