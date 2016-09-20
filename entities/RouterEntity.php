@@ -81,4 +81,13 @@ class RouterEntity extends BaseEntity {
      */
 	protected $children;
     
+    
+    public function getLink()
+    {
+        $module = $this->module;
+        $presenter = $this->presenter;
+        $action = $this->action;
+        return ":$module:$presenter:$action";
+    }
+    
 }
