@@ -29,7 +29,9 @@ class AdminMenuItem implements \Wame\MenuModule\Models\IMenuItem
 	{
         $item = new Item();
 		$item->setName('router');
-		
+		$item->setTitle(_('Routers'));
+        $item->setLink($this->linkGenerator->link('Admin:Router:', ['id' => null]));
+        $item->setIcon('fa fa-compass');
 		$item->addNode($this->routersDefault());
 		
 		return $item->getItem();
