@@ -13,4 +13,4 @@ services:
             - add(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\Params())
             - add(Wame\DataGridControl\Actions\Edit())
             - add(Wame\DataGridControl\Actions\Delete())
-            - add(Wame\DataGridControl\ToolbarButtons\Add())
+            - add(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\ToolbarButtons\Add())
