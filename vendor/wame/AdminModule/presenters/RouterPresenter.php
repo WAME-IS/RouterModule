@@ -2,66 +2,76 @@
 
 namespace App\AdminModule\Presenters;
 
+use Wame\DynamicObject\Vendor\Wame\AdminModule\Presenters\AdminFormPresenter;
 use Wame\RouterModule\Entities\RouterEntity;
 use Wame\RouterModule\Repositories\RouterRepository;
 use Wame\RouterModule\Vendor\Wame\AdminModule\Grids\RouterGrid;
-use Wame\RouterModule\Vendor\Wame\AdminModule\Forms\RouterForm;
 
-class RouterPresenter extends BasePresenter
-{	
+
+class RouterPresenter extends AdminFormPresenter
+{
     /** @var RouterRepository @inject */
-	public $routerRepository;
-    
+	public $repository;
+
     /** @var RouterGrid @inject */
 	public $routerGrid;
-    
-    /** @var RouterForm @inject */
-	public $routerForm;
-    
-    
-	public function startup() 
-	{
-		parent::startup();
-		
-		if (!$this->user->isAllowed('router', 'view')) {
-			$this->flashMessage(_('To enter this section you have sufficient privileges.'), 'danger');
-			$this->redirect('parent');
-		}
-	}
-    
-    
+
+    /** @var RouterEntity */
+	protected $entity;
+
+    /** @var int */
+	private $count;
+
+
     /** actions ***************************************************************/
-    
-    /**
-     * Action edit
-     */
+
+    public function actionDefault()
+    {
+        if (!$this->user->isAllowed('router', 'default')) {
+			$this->flashMessage(_('To enter this section you have not sufficient privileges.'), 'danger');
+			$this->redirect(':Admin:Dashboad:');
+		}
+
+        $this->count = $this->repository->countBy([]);
+    }
+
+
     public function actionEdit()
     {
-        
+        if (!$this->user->isAllowed('router', 'edit')) {
+			$this->flashMessage(_('To enter this section you have not sufficient privileges.'), 'danger');
+			$this->redirect(':Admin:Router:');
+		}
+
+        $this->entity = $this->repository->get(['id' => $this->id]);
     }
-    
-    /**
-     * Action create
-     */
-    public function actionCreate()
+
+
+    public function actionDelete()
     {
-        
+        if (!$this->user->isAllowed('router', 'delete')) {
+			$this->flashMessage(_('To enter this section you have not sufficient privileges.'), 'danger');
+			$this->redirect(':Admin:Router:');
+		}
+
+        $this->entity = $this->repository->get(['id' => $this->id]);
     }
-    
-    
+
+
     /** handles ***************************************************************/
-    
-    /**
-     * Handle delete
-     */
-    public function handleDelete()
-    {
-        
-    }
-    
+
+	public function handleDelete()
+	{
+        $this->repository->changeStatus(['id' => $this->id], RouterRepository::STATUS_DISABLED);
+
+		$this->flashMessage(sprintf(_('Route for %s has been successfully deleted'), $this->entity->getPresenter() . ':' . $this->entity->getAction()), 'success');
+		$this->redirect(':Admin:Router:', ['id' => null]);
+	}
+
+
     /**
      * Handle sort
-     * 
+     *
      * @param integer $item_id      item id
      * @param integer $prev_id      prev id
      * @param integer $next_id      next id
@@ -69,90 +79,81 @@ class RouterPresenter extends BasePresenter
      */
     public function handleSort($item_id, $prev_id, $next_id, $parent_id)
     {
-        $item = $this->routerRepository->get(['id' => $item_id]);
-        $parent = $this->routerRepository->get(['id' => $item_id]);
-        
+        $item = $this->repository->get(['id' => $item_id]);
+        $parent = $this->repository->get(['id' => $item_id]);
+
         $item->parent = $parent;
-        
-//        $item = $this->routerRepository->get(['id' => $item_id]);
-//        $this->routerRepository->moveAfter($item, $prev_id);
-        
+
+        // Todo
+//        $item = $this->repository->get(['id' => $item_id]);
+//        $this->repository->moveAfter($item, $prev_id);
+
         $this->flashMessage(
             "Id: $item_id, Previous id: $prev_id, Next id: $next_id, Parent id: $parent_id",
             'success'
         );
-        
+
         if ($this->isAjax()) {
             $this->redrawControl('flashes');
         } else {
             $this->redirect('this');
         }
     }
-    
-    
-    
+
+
     /** renders ***************************************************************/
 
 	public function renderDefault()
 	{
 		$this->template->siteTitle = _('Routes');
-		$this->template->routerEntity = $this->routerRepository->find();
+		$this->template->count = $this->count;
 	}
-    
+
+
     public function renderEdit()
     {
-        
+        $this->template->siteTitle = _('Edit route');
+        $this->template->subTitle = $this->entity->getPresenter() . ':' . $this->entity->getAction();
     }
-    
-    public function renderCreate()
-    {
-        
-    }
-    
+
+
     public function renderDelete()
     {
-        
+        $this->template->siteTitle = _('Delete route');
+        $this->template->subTitle = $this->entity->getPresenter() . ':' . $this->entity->getAction();
     }
-    
-    
+
+
     /** components ************************************************************/
-    
-    /**
-     * Router form component
-     * 
-     * @return RouterForm
-     */
-    protected function createComponentRouterForm()
-	{
-        $form = $this->routerForm->setId($this->id)->build();
-		
-		return $form;
-	}
-    
-    
-    /**
-	 * Create router grid component
-     * 
-	 * @return RouterGrid
-	 */
+
 	protected function createComponentRouterGrid()
 	{
-        $qb = $this->routerRepository->createQueryBuilder('a');
+        $qb = $this->repository->createQueryBuilder('a');
         $qb->andWhere($qb->expr()->isNull('a.parent'));
-        
+
 		$this->routerGrid->setDataSource($qb);
         $this->routerGrid->setSortable();
         $this->routerGrid->setTreeView([$this, 'getChildren'], 'children');
-		
+
 		return $this->routerGrid;
 	}
-    
+
+
     public function getChildren($item)
     {
-        $qb = $this->routerRepository->createQueryBuilder('a');
+        $qb = $this->repository->createQueryBuilder('a');
         $qb->andWhere($qb->expr()->eq('a.parent', ':parent'))->setParameter('parent', $item);
-        
+
         return $qb;
+    }
+
+
+    /** abstract methods ******************************************************/
+
+    /** {@inheritdoc} */
+    protected function getFormBuilderServiceAlias()
+    {
+        return 'Admin.RouteFormBuilder';
     }
 
 }

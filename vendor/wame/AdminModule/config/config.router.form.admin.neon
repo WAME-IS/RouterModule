@@ -1,0 +1,11 @@
+services:
+    - Wame\RouterModule\Vendor\Wame\AdminModule\Forms\Containers\IRouteContainerFactory
+
+
+    Admin.RouteFormBuilder:
+        class: Wame\DynamicObject\Forms\EntityFormBuilder
+        setup:
+            - setRepository(@RouterRepository)
+            - redirectTo('Router:', { 'id' : null })
+            - add(@Wame\RouterModule\Vendor\Wame\AdminModule\Forms\Containers\IRouteContainerFactory, 'RouteContainer', {priority: 50})
+            - add(@Wame\DynamicObject\Forms\Containers\ISubmitContainerFactory, 'SubmitContainer', {priority: 10})

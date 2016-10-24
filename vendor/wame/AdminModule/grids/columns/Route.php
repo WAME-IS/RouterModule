@@ -13,13 +13,13 @@ class Route extends BaseGridItem
                 ->setEditableCallback([$this, 'columnEdited'])
                 ->setSortable()
 				->setFilterText();
-                
+
 		return $grid;
 	}
-    
+
     /**
      * Callback
-     * 
+     *
      * @param integer $id       ID
      * @param string $value     new value
      */
@@ -27,5 +27,5 @@ class Route extends BaseGridItem
     {
         echo("Id: $id, new value: $value"); die;
     }
-    
+
 }

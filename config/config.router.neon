@@ -5,10 +5,10 @@ services:
     PermissionObject:
         setup:
             - addResource('router')
-            - addResourceAction('router', 'view')
-            - allow('admin', 'router', 'view')
-            - addResourceAction('router', 'add')
-            - allow('admin', 'router', 'add')
+            - addResourceAction('router', 'default')
+            - allow('admin', 'router', 'default')
+            - addResourceAction('router', 'create')
+            - allow('admin', 'router', 'create')
             - addResourceAction('router', 'edit')
             - allow('admin', 'router', 'edit')
             - addResourceAction('router', 'delete')

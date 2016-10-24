@@ -1,0 +1,16 @@
+services:
+    RouterGrid:
+        class: Wame\RouterModule\Vendor\Wame\AdminModule\Grids\RouterGrid
+        setup:
+            - add(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\Route(), null, {priority: 90})
+            - add(Wame\DataGridControl\Columns\Lang(), null, {priority: 80})
+            - add(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\Module(), null, {priority: 60})
+            - add(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\Presenter(), null, {priority: 50})
+            - add(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\Action(), null, {priority: 40})
+            - add(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\Defaults(), null, {priority: 30})
+            - add(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\Sitemap(), null, {priority: 20})
+            - add(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\Status(), null, {priority: 10})
+#            - add(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\Columns\Params(), null, {priority: 9})
+            - add(Wame\DataGridControl\Actions\EditModal(), null, {priority: 2})
+            - add(Wame\DataGridControl\Actions\Delete(), null, {priority: 1})
+            - add(Wame\RouterModule\Vendor\Wame\AdminModule\Grids\ToolbarButtons\Add())

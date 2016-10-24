@@ -1,9 +1,0 @@
-services:
-	# Factories
-	- Wame\RouterModule\Forms\IRouteFormContainerFactory
-
-	# Forms
-	RouterForm:
-		class: Wame\RouterModule\Vendor\Wame\AdminModule\Forms\RouterForm
-		setup:
-			- addFormContainer(Wame\RouterModule\Forms\RouteFormContainer(), 'RouteFormContainer', 90)
