@@ -19,20 +19,17 @@ class RouterPresenter extends AdminFormPresenter
     /** @var RouterEntity */
 	protected $entity;
 
-    /** @var int */
-	private $count;
-
 
     /** actions ***************************************************************/
 
     public function actionDefault()
     {
+        parent::actionDefault();
+        
         if (!$this->user->isAllowed('router', 'default')) {
 			$this->flashMessage(_('To enter this section you have not sufficient privileges.'), 'danger');
 			$this->redirect(':Admin:Dashboad:');
 		}
-
-        $this->count = $this->repository->countBy([]);
     }
 
 
