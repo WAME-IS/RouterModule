@@ -38,7 +38,22 @@ class ActiveRoute extends Route {
 		
 		$metadata = [
 			'presenter' => $this->presenter,
-			'action' => $this->action
+			'action' => $this->action,
+            'filter' => [
+//                \Nette\Application\Routers\Route::FILTER_IN => function($string) {
+//                    \Tracy\Debugger::barDump($string, "in");
+////                    $entities = array('%21', '%2A', '%27', '%28', '%29', '%3B', '%40', '%26', '%3D', '%2B', '%24', '%2C', '%2F', '%3F', '%25', '%23', '%5B', '%5D');
+////                    $replacements = array('!', '*', "'", "(", ")", ";", "@", "&", "=", "+", "$", ",", "/", "?", "%", "#", "[", "]");
+////                    return str_replace($entities, $replacements, $string);
+//                    
+//                    return $string;
+//                },
+                \Nette\Application\Routers\Route::FILTER_OUT => function($string) {
+                    \Tracy\Debugger::barDump("out");
+                    
+                    return $string;
+                }
+            ]
 		];
 
 		if ($this->module) {
