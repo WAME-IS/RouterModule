@@ -40,19 +40,8 @@ class ActiveRoute extends Route {
 			'presenter' => $this->presenter,
 			'action' => $this->action,
             'filter' => [
-//                \Nette\Application\Routers\Route::FILTER_IN => function($string) {
-//                    \Tracy\Debugger::barDump($string, "in");
-////                    $entities = array('%21', '%2A', '%27', '%28', '%29', '%3B', '%40', '%26', '%3D', '%2B', '%24', '%2C', '%2F', '%3F', '%25', '%23', '%5B', '%5D');
-////                    $replacements = array('!', '*', "'", "(", ")", ";", "@", "&", "=", "+", "$", ",", "/", "?", "%", "#", "[", "]");
-////                    return str_replace($entities, $replacements, $string);
-//                    
-//                    return $string;
-//                },
-                \Nette\Application\Routers\Route::FILTER_OUT => function($string) {
-                    \Tracy\Debugger::barDump("out");
-                    
-                    return $string;
-                }
+                \Nette\Application\Routers\Route::FILTER_IN => 'filterIn',
+                \Nette\Application\Routers\Route::FILTER_OUT => 'filterOut'
             ]
 		];
 
@@ -81,4 +70,37 @@ class ActiveRoute extends Route {
             return $activeRequest;
         }
     }
+    
+    
+    /**
+     * Filter in
+     * 
+     * @param type $string
+     * @return string
+     */
+    public function filterIn($string)
+    {
+        \Tracy\Debugger::barDump($string, "in");
+        
+//        $entities = array('%21', '%2A', '%27', '%28', '%29', '%3B', '%40', '%26', '%3D', '%2B', '%24', '%2C', '%2F', '%3F', '%25', '%23', '%5B', '%5D');
+//        $replacements = array('!', '*', "'", "(", ")", ";", "@", "&", "=", "+", "$", ",", "/", "?", "%", "#", "[", "]");
+//        
+//        return str_replace($entities, $replacements, $string);
+        
+        return $string;
+    }
+    
+    /**
+     * Filter out
+     * 
+     * @param string $string
+     * @return string
+     */
+    public function filterOut($string)
+    {
+        \Tracy\Debugger::barDump("out");
+        
+        return $string;
+    }
+    
 }
