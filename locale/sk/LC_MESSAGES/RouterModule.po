@@ -1,0 +1,102 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: RouterModule\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2016-11-07T09:51:17+01:00\n"
+"PO-Revision-Date: 2016-11-07T09:51:17+01:00\n"
+"Language: sk\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: gettext;__;ngettext;n__;pgettext;p__;dgettext;d__;dpgettext;dp__;npgettext;np__;dnpgettext;dnp__;noop;noop__;_\n"
+"X-Poedit-Basepath: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/RouterModule\n"
+"X-Poedit-SearchPath-0: .\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);\n"
+"X-Domain: RouterModule\n"
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/RouterModule/vendor/wame/AdminModule/forms/containers/route/RouteContainer.php:21
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/RouterModule/vendor/wame/AdminModule/grids/columns/Route.php:12
+msgid "Route"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/RouterModule/vendor/wame/AdminModule/forms/containers/route/RouteContainer.php:22
+msgid "Please enter route"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/RouterModule/vendor/wame/AdminModule/grids/columns/Action.php:12
+msgid "Action"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/RouterModule/vendor/wame/AdminModule/grids/columns/Defaults.php:12
+msgid "Defaults"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/RouterModule/vendor/wame/AdminModule/grids/columns/Module.php:12
+msgid "Module"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/RouterModule/vendor/wame/AdminModule/grids/columns/Params.php:12
+msgid "Params"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/RouterModule/vendor/wame/AdminModule/grids/columns/Presenter.php:12
+msgid "Presenter"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/RouterModule/vendor/wame/AdminModule/grids/columns/Sitemap.php:18
+msgid "Sitemap"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/RouterModule/vendor/wame/AdminModule/grids/columns/Sitemap.php:19
+msgid "Yes"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/RouterModule/vendor/wame/AdminModule/grids/columns/Sitemap.php:23
+msgid "No"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/RouterModule/vendor/wame/AdminModule/grids/columns/Status.php:12
+msgid "Status"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/RouterModule/vendor/wame/AdminModule/grids/columns/Status.php:13
+msgid "Enabled"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/RouterModule/vendor/wame/AdminModule/grids/columns/Status.php:17
+msgid "Disabled"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/RouterModule/vendor/wame/AdminModule/grids/toolbarButtons/Add.php:12
+msgid "Create route"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/RouterModule/vendor/wame/AdminModule/presenters/RouterPresenter.php:30
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/RouterModule/vendor/wame/AdminModule/presenters/RouterPresenter.php:39
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/RouterModule/vendor/wame/AdminModule/presenters/RouterPresenter.php:50
+msgid "To enter this section you have not sufficient privileges."
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/RouterModule/vendor/wame/AdminModule/presenters/RouterPresenter.php:64
+msgid "Route for %s has been successfully deleted"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/RouterModule/vendor/wame/AdminModule/presenters/RouterPresenter.php:105
+msgid "Routes"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/RouterModule/vendor/wame/AdminModule/presenters/RouterPresenter.php:112
+msgid "Edit route"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/RouterModule/vendor/wame/AdminModule/presenters/RouterPresenter.php:119
+msgid "Delete route"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/RouterModule/vendor/wame/MenuModule/components/MenuControl/AdminMenu/AdminMenuItem.php:32
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/RouterModule/vendor/wame/MenuModule/components/MenuControl/AdminMenu/AdminMenuItem.php:45
+msgid "Routers"
+msgstr ""
