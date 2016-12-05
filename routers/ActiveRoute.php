@@ -80,7 +80,7 @@ class ActiveRoute extends Route {
      */
     public function filterIn($string)
     {
-        \Tracy\Debugger::barDump($string, "in");
+//        \Tracy\Debugger::barDump($string, "in");
         
 //        $entities = array('%21', '%2A', '%27', '%28', '%29', '%3B', '%40', '%26', '%3D', '%2B', '%24', '%2C', '%2F', '%3F', '%25', '%23', '%5B', '%5D');
 //        $replacements = array('!', '*', "'", "(", ")", ";", "@", "&", "=", "+", "$", ",", "/", "?", "%", "#", "[", "]");
@@ -98,7 +98,7 @@ class ActiveRoute extends Route {
      */
     public function filterOut($string)
     {
-        \Tracy\Debugger::barDump("out");
+//        \Tracy\Debugger::barDump("out");
         
         return $string;
     }
