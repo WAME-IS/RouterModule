@@ -1,30 +1,32 @@
 <?php
 
-namespace Wame\RouterModule\Model;
+namespace Wame\RouterModule\Registers;
 
-use Wame\Core\Registers\BaseRegister,
-    Wame\RouterModule\Entities\RouterEntity,
-    Wame\RouterModule\Repositories\RouterRepository;
+use Wame\Core\Registers\BaseRegister;
+use Wame\RouterModule\Entities\RouterEntity;
+use Wame\RouterModule\Repositories\RouterRepository;
+use h4kuna\Gettext\GettextSetup;
 
-/**
- * @author Dominik Gmiterko <ienze@ienze.me>
- */
 class DefaultRoutesRegister extends BaseRegister
 {
-
     /** @var RouterRepository */
     private $routerRepository;
 
-    /** @var h4kuna\Gettext\GettextSetup */
+    /** @var GettextSetup */
     private $translator;
 
-    public function __construct(RouterRepository $routerRepository, \h4kuna\Gettext\GettextSetup $translator)
+
+    public function __construct(RouterRepository $routerRepository, GettextSetup $translator)
     {
         parent::__construct(RouterEntity::class);
         $this->routerRepository = $routerRepository;
         $this->translator = $translator;
     }
 
+
+    /**
+     * Update routes table
+     */
     public function updateRoutesTable()
     {
         foreach ($this as $defaultRoute) {
@@ -42,6 +44,12 @@ class DefaultRoutesRegister extends BaseRegister
         }
     }
 
+    /**
+     * Add
+     *
+     * @param object $service
+     * @param null $name
+     */
     public function add($service, $name = null)
     {
         //if no lang is specified, use all langs
@@ -55,4 +63,5 @@ class DefaultRoutesRegister extends BaseRegister
             }
         }
     }
+
 }

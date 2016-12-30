@@ -1,4 +1,33 @@
 services:
+    # Permissions
+    PermissionObject:
+        setup:
+            - addResource('router')
+            - addResourceAction('router', 'default')
+            - allow('admin', 'router', 'default')
+            - addResourceAction('router', 'create')
+            - allow('admin', 'router', 'create')
+            - addResourceAction('router', 'edit')
+            - allow('admin', 'router', 'edit')
+            - addResourceAction('router', 'delete')
+            - allow('admin', 'router', 'delete')
+
+
+    # Form containers
+    - Wame\RouterModule\Vendor\Wame\AdminModule\Forms\Containers\IRouteContainerFactory
+
+
+    # Forms
+    Admin.RouteFormBuilder:
+        class: Wame\DynamicObject\Forms\EntityFormBuilder
+        setup:
+            - setRepository(@RouterRepository)
+            - redirectTo('Router:', { 'id' : null })
+            - add(@Wame\RouterModule\Vendor\Wame\AdminModule\Forms\Containers\IRouteContainerFactory, 'RouteContainer', {priority: 50})
+            - add(@Wame\DynamicObject\Forms\Containers\ISubmitContainerFactory, 'SubmitContainer', {priority: 10})
+
+
+    # Grids
     RouterGrid:
         class: Wame\RouterModule\Vendor\Wame\AdminModule\Grids\RouterGrid
         setup:

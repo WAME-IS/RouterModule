@@ -2,39 +2,35 @@ services:
     router:
         class: Wame\RouterModule\Routers\Router
 
-    PermissionObject:
-        setup:
-            - addResource('router')
-            - addResourceAction('router', 'default')
-            - allow('admin', 'router', 'default')
-            - addResourceAction('router', 'create')
-            - allow('admin', 'router', 'create')
-            - addResourceAction('router', 'edit')
-            - allow('admin', 'router', 'edit')
-            - addResourceAction('router', 'delete')
-            - allow('admin', 'router', 'delete')
 
     # Repositories
     RouterRepository:
         class: Wame\RouterModule\Repositories\RouterRepository
         inject: yes
 
+
     # Registers
     defaultRoutesRegister:
-        class: Wame\RouterModule\Model\DefaultRoutesRegister
+        class: Wame\RouterModule\Registers\DefaultRoutesRegister
     slugHandlersRegister:
         class: Wame\RouterModule\Registers\FilterHandlersRegister
 
+
     # Listener
     - {class: Wame\RouterModule\Filter\FilterListener, tags: [kdyby.subscriber]}
+
 
     # Commands
     updateDefaultRoutesCommand:
         class: Wame\RouterModule\Commands\UpdateDefaultRoutesCommand
         tags: [kdyby.console.command]
 
+
+
 extensions:
     router: Wame\RouterModule\DI\Extension
+
+
 
 doctrine:
     metadata:

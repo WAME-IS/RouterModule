@@ -10,9 +10,7 @@
         }
     ],
     "require": {
-        "wame/Core": "*",
-        "wame/MenuModule": "*",
-        "wame/PermissionModule": "*"
+        "wame/Core": "*"
     },
     "autoload": {
         "classmap": [

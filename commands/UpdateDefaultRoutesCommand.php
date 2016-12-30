@@ -6,7 +6,7 @@ use Nette\Mail\SmtpException,
 	Symfony\Component\Console\Command\Command,
 	Symfony\Component\Console\Input\InputInterface,
 	Symfony\Component\Console\Output\OutputInterface,
-	Wame\RouterModule\Model\DefaultRoutesRegister;
+	Wame\RouterModule\Registers\DefaultRoutesRegister;
 
 /**
  * @author Dominik Gmiterko <ienze@ienze.me>
