@@ -16,14 +16,15 @@ use Nette\Application\Routers\Route;
  */
 class FilterListener implements Subscriber
 {
-
     /** @var FilterHandlersRegister */
     private $filterHandlersRegister;
+
 
     public function __construct(FilterHandlersRegister $filterHandlersRegister)
     {
         $this->filterHandlersRegister = $filterHandlersRegister;
     }
+
 
     public function getSubscribedEvents()
     {
@@ -51,9 +52,10 @@ class FilterListener implements Subscriber
     }
 
     /**
-     * 
-     * @param RouterEntity $route
-     * @return IFilterHandler
+     *
+     * @param RouterEntity|ActiveRoute $route
+     * @return \Wame\RouterModule\Filter\IFilterHandler
+     * @throws InvalidArgumentException
      */
     private function getFilters(ActiveRoute $route)
     {
@@ -77,4 +79,5 @@ class FilterListener implements Subscriber
             }
         }
     }
+
 }
