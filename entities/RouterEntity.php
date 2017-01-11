@@ -2,17 +2,16 @@
 
 namespace Wame\RouterModule\Entities;
 
-use Doctrine\ORM\Mapping as ORM,
-	Nette\Application\Routers\Route,
-	Wame\Core\Entities\BaseEntity,
-	Wame\RouterModule\Routers\RouterEntityRoute;
+use Doctrine\ORM\Mapping as ORM;
+use Wame\Core\Entities\BaseEntity;
+use Wame\RouterModule\Routers\RouterEntityRoute;
 
 /**
  * @ORM\Table(name="wame_router")
  * @ORM\Entity
  */
-class RouterEntity extends BaseEntity {
-
+class RouterEntity extends BaseEntity
+{
 	/**
 	 * @ORM\Column(name="id", type="integer", length=2, nullable=false)
 	 * @ORM\Id

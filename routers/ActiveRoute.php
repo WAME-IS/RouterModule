@@ -2,21 +2,17 @@
 
 namespace Wame\RouterModule\Routers;
 
+use Nette\Application\Request;
 use Nette\Application\Routers\Route;
 use Nette\Http\IRequest;
 use Wame\RouterModule\Entities\RouterEntity;
 
-/**
- * @author Dominik Gmiterko <ienze@ienze.me>
- */
-class ActiveRoute extends Route {
-
+class ActiveRoute extends Route
+{
 	/** @var RouterEntity */
 	private $routerEntity;
 
-	/*
-	 * Route properties
-	 */
+	/* Route properties */
 	public $route;
 	public $module;
 	public $presenter;
@@ -24,7 +20,9 @@ class ActiveRoute extends Route {
 	public $defaults;
 	public $params;
 
-	public function __construct(RouterEntity $routerEntity) {
+
+	public function __construct(RouterEntity $routerEntity)
+    {
 		$this->routerEntity = $routerEntity;
 		$this->route = $routerEntity->route;
 		$this->module = $routerEntity->module;
@@ -33,16 +31,16 @@ class ActiveRoute extends Route {
 		$this->defaults = $routerEntity->defaults;
 		$this->params = $routerEntity->params;
 	}
-	
+
+
+    /**
+     * Create route
+     */
 	public function createRoute() {
 		
 		$metadata = [
 			'presenter' => $this->presenter,
-			'action' => $this->action,
-            'filter' => [
-                \Nette\Application\Routers\Route::FILTER_IN => 'filterIn',
-                \Nette\Application\Routers\Route::FILTER_OUT => 'filterOut'
-            ]
+			'action' => $this->action
 		];
 
 		if ($this->module) {
@@ -56,51 +54,24 @@ class ActiveRoute extends Route {
 		parent::__construct($this->route, $metadata);
 	}
 
+	/** {@inheritdoc} */
     public function match(IRequest $httpRequest)
     {
         $request = parent::match($httpRequest);
+
         if($request) {
             $activeRequest = new ActiveRequest($request->getPresenterName(), $request->getMethod(), $request->getParameters(), $request->getPost(), $request->getFiles());
+
             //copy flags
-            foreach([\Nette\Application\Request::RESTORED, \Nette\Application\Request::SECURED] as $flag) {
+            foreach([Request::RESTORED, Request::SECURED] as $flag) {
                 $activeRequest->setFlag($flag, $request->hasFlag($flag));
             }
+
             //set router entity
             $activeRequest->setRouterEntity($this->routerEntity);
+
             return $activeRequest;
         }
-    }
-    
-    
-    /**
-     * Filter in
-     * 
-     * @param type $string
-     * @return string
-     */
-    public function filterIn($string)
-    {
-//        \Tracy\Debugger::barDump($string, "in");
-        
-//        $entities = array('%21', '%2A', '%27', '%28', '%29', '%3B', '%40', '%26', '%3D', '%2B', '%24', '%2C', '%2F', '%3F', '%25', '%23', '%5B', '%5D');
-//        $replacements = array('!', '*', "'", "(", ")", ";", "@", "&", "=", "+", "$", ",", "/", "?", "%", "#", "[", "]");
-//        
-//        return str_replace($entities, $replacements, $string);
-        
-        return $string;
-    }
-    
-    /**
-     * Filter out
-     * 
-     * @param string $string
-     * @return string
-     */
-    public function filterOut($string)
-    {
-//        \Tracy\Debugger::barDump("out");
-        
-        return $string;
     }
     
 }
