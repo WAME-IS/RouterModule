@@ -13,12 +13,10 @@
         { "type": "composer", "url": "http://packages.wame.sk" }
     ],
     "config": { "secure-http": false },
-    "require": {
-        "wame/Core": ">=0.0.1"
-    },
     "softRequire": {
         "wame/AdminModule": ">=0.0.1",
-        "wame/MenuModule": ">=0.0.1"
+        "wame/MenuModule": ">=0.0.1",
+        "wame/Core": ">=0.0.1"
     },
     "autoload": {
         "classmap": [
