@@ -18,26 +18,28 @@ class ActiveRoute extends Route
 	public $presenter;
 	public $action;
 	public $defaults;
-	public $params;
+    public $params;
+    public $lang;
 
 
 	public function __construct(RouterEntity $routerEntity)
     {
 		$this->routerEntity = $routerEntity;
-		$this->route = $routerEntity->route;
-		$this->module = $routerEntity->module;
-		$this->presenter = $routerEntity->presenter;
-		$this->action = $routerEntity->action;
-		$this->defaults = $routerEntity->defaults;
-		$this->params = $routerEntity->params;
+		$this->route = $routerEntity->getRoute();
+		$this->module = $routerEntity->getModule();
+		$this->presenter = $routerEntity->getPresenter();
+		$this->action = $routerEntity->getAction();
+		$this->defaults = $routerEntity->getDefaults();
+        $this->params = $routerEntity->getParams();
+        $this->lang = $routerEntity->getLang();
 	}
 
 
     /**
      * Create route
      */
-	public function createRoute() {
-		
+	public function createRoute()
+    {
 		$metadata = [
 			'presenter' => $this->presenter,
 			'action' => $this->action
@@ -54,12 +56,13 @@ class ActiveRoute extends Route
 		parent::__construct($this->route, $metadata);
 	}
 
+
 	/** {@inheritdoc} */
     public function match(IRequest $httpRequest)
     {
         $request = parent::match($httpRequest);
 
-        if($request) {
+        if ($request) {
             $activeRequest = new ActiveRequest($request->getPresenterName(), $request->getMethod(), $request->getParameters(), $request->getPost(), $request->getFiles());
 
             //copy flags

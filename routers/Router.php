@@ -3,11 +3,16 @@
 namespace Wame\RouterModule\Routers;
 
 use Nette\Application\Routers\RouteList;
+use Nette\DI\Container;
 use Nette\Http\IRequest;
+use Nette\Http\Request;
+use Nette\Localization\ITranslator;
+use Wame\LanguageModule\Repositories\LanguageRepository;
 use Wame\RouterModule\Event\RoutePostprocessEvent;
 use Wame\RouterModule\Event\RoutePreprocessEvent;
 use Wame\RouterModule\Repositories\RouterRepository;
 use Wame\RouterModule\Routers\ActiveRoute;
+
 
 class Router extends RouteList
 {
@@ -38,19 +43,18 @@ class Router extends RouteList
     
     public function setup()
     {
-        if ($this->setuped) {
-            return;
-        }
-        
-        $this->setuped = true;
-        
-        foreach ($this->routerRepository->find([], ['sort' => 'DESC']) as $route) {
+        if ($this->setuped) return;
 
+        $this->setuped = true;
+
+        foreach ($this->routerRepository->find(['status' => RouterRepository::STATUS_ENABLED], ['sort' => 'DESC']) as $route) {
             $activeRoute = new ActiveRoute($route);
 
             $routePreprocessEvent = new RoutePreprocessEvent($activeRoute);
+
             $this->onPreprocess($routePreprocessEvent);
             $activeRoute = $routePreprocessEvent->getRoute();
+
             if (!$activeRoute) {
                 continue;
             }
@@ -59,6 +63,7 @@ class Router extends RouteList
 
             $routePostprocessEvent = new RoutePostprocessEvent($activeRoute);
             $this->onPostprocess($routePostprocessEvent);
+
             if (!$routePostprocessEvent->getRoute()) {
                 continue;
             }
@@ -67,9 +72,11 @@ class Router extends RouteList
         }
     }
 
+
     public function match(IRequest $httpRequest)
     {
         $this->setup();
+
         return parent::match($httpRequest);
     }
     

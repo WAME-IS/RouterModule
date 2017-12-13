@@ -86,6 +86,7 @@ class RouterEntity extends BaseEntity
         $module = $this->module;
         $presenter = $this->presenter;
         $action = $this->action;
+
         return ":$module:$presenter:$action";
     }
     

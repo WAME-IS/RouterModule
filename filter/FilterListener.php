@@ -11,6 +11,7 @@ use Wame\RouterModule\Routers\ActiveRoute;
 use WebLoader\InvalidArgumentException;
 use Nette\Application\Routers\Route;
 
+
 /**
  * @author Dominik Gmiterko <ienze@ienze.me>
  */
@@ -31,13 +32,16 @@ class FilterListener implements Subscriber
         return ['Wame\RouterModule\Routers\Router::onPreprocess'];
     }
 
+
     public function onPreprocess(RoutePreprocessEvent $event)
     {
         $route = $event->getRoute();
         $filters = $this->getFilters($route);
+
         if ($filters) {
             foreach ($filters as $filter) {
                 $defaults = $route->defaults;
+
                 $defaults[$filter->getParameterName()] = [
                     Route::FILTER_IN => function($in) use ($filter) {
                         return $filter->filterIn($in);
@@ -46,10 +50,12 @@ class FilterListener implements Subscriber
                         return $filter->filterOut($out);
                     },
                 ];
+
                 $route->defaults = $defaults;
             }
         }
     }
+
 
     /**
      *
