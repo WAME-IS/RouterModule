@@ -2,6 +2,7 @@
 
 namespace Wame\RouterModule\Routers;
 
+use Nette\Application\Routers\Route;
 use Nette\Application\Routers\RouteList;
 use Nette\DI\Container;
 use Nette\Http\IRequest;
@@ -34,41 +35,51 @@ class Router extends RouteList
      */
     public $onPostprocess = [];
 
-    
+
     public function __construct(RouterRepository $routerRepository)
     {
         $this->routerRepository = $routerRepository;
     }
 
-    
+
     public function setup()
     {
         if ($this->setuped) return;
 
         $this->setuped = true;
 
-        foreach ($this->routerRepository->find(['status' => RouterRepository::STATUS_ENABLED], ['sort' => 'DESC']) as $route) {
-            $activeRoute = new ActiveRoute($route);
+        try {
+            foreach ($this->routerRepository->find(['status' => RouterRepository::STATUS_ENABLED], ['sort' => 'DESC']) as $route) {
+                $activeRoute = new ActiveRoute($route);
 
-            $routePreprocessEvent = new RoutePreprocessEvent($activeRoute);
+                $routePreprocessEvent = new RoutePreprocessEvent($activeRoute);
 
-            $this->onPreprocess($routePreprocessEvent);
-            $activeRoute = $routePreprocessEvent->getRoute();
+                $this->onPreprocess($routePreprocessEvent);
+                $activeRoute = $routePreprocessEvent->getRoute();
 
-            if (!$activeRoute) {
-                continue;
+                if (!$activeRoute) {
+                    continue;
+                }
+
+                $activeRoute->createRoute();
+
+                $routePostprocessEvent = new RoutePostprocessEvent($activeRoute);
+                $this->onPostprocess($routePostprocessEvent);
+
+                if (!$routePostprocessEvent->getRoute()) {
+                    continue;
+                }
+
+                $this[] = $routePostprocessEvent->getRoute();
             }
-
-            $activeRoute->createRoute();
-
-            $routePostprocessEvent = new RoutePostprocessEvent($activeRoute);
-            $this->onPostprocess($routePostprocessEvent);
-
-            if (!$routePostprocessEvent->getRoute()) {
-                continue;
-            }
-
-            $this[] = $routePostprocessEvent->getRoute();
+        } catch (\Exception $e) {
+            $this[] = new Route("/[<lang>/]<module>/<presenter>/<action>/[<id>]", [
+                'lang' => 'en',
+                'module' => 'Homepage',
+                'presenter' => 'Homepage',
+                'action' => 'default',
+                'id' => null
+            ]);
         }
     }
 
@@ -79,5 +90,5 @@ class Router extends RouteList
 
         return parent::match($httpRequest);
     }
-    
+
 }
