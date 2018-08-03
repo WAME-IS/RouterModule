@@ -17,6 +17,9 @@ use Wame\RouterModule\Routers\ActiveRoute;
 
 class Router extends RouteList
 {
+    /** @var Container */
+    private $container;
+
     /** @var RouterRepository */
     private $routerRepository;
 
@@ -36,8 +39,9 @@ class Router extends RouteList
     public $onPostprocess = [];
 
 
-    public function __construct(RouterRepository $routerRepository)
+    public function __construct(Container $container, RouterRepository $routerRepository)
     {
+        $this->container = $container;
         $this->routerRepository = $routerRepository;
     }
 
@@ -48,38 +52,44 @@ class Router extends RouteList
 
         $this->setuped = true;
 
-        try {
-            foreach ($this->routerRepository->find(['status' => RouterRepository::STATUS_ENABLED], ['sort' => 'DESC']) as $route) {
-                $activeRoute = new ActiveRoute($route);
+        // Console mode CLI
+        if ($this->container->parameters['consoleMode']) {
+            $router[] = new CliRouter(['lang' => 'en']);
+            $router[] = new Route(['lang' => 'en']);
+        } else {
+            try {
+                foreach ($this->routerRepository->find(['status' => RouterRepository::STATUS_ENABLED], ['sort' => 'DESC']) as $route) {
+                    $activeRoute = new ActiveRoute($route);
 
-                $routePreprocessEvent = new RoutePreprocessEvent($activeRoute);
+                    $routePreprocessEvent = new RoutePreprocessEvent($activeRoute);
 
-                $this->onPreprocess($routePreprocessEvent);
-                $activeRoute = $routePreprocessEvent->getRoute();
+                    $this->onPreprocess($routePreprocessEvent);
+                    $activeRoute = $routePreprocessEvent->getRoute();
 
-                if (!$activeRoute) {
-                    continue;
+                    if (!$activeRoute) {
+                        continue;
+                    }
+
+                    $activeRoute->createRoute();
+
+                    $routePostprocessEvent = new RoutePostprocessEvent($activeRoute);
+                    $this->onPostprocess($routePostprocessEvent);
+
+                    if (!$routePostprocessEvent->getRoute()) {
+                        continue;
+                    }
+
+                    $this[] = $routePostprocessEvent->getRoute();
                 }
-
-                $activeRoute->createRoute();
-
-                $routePostprocessEvent = new RoutePostprocessEvent($activeRoute);
-                $this->onPostprocess($routePostprocessEvent);
-
-                if (!$routePostprocessEvent->getRoute()) {
-                    continue;
-                }
-
-                $this[] = $routePostprocessEvent->getRoute();
+            } catch (\Exception $e) {
+                $this[] = new Route("/[<lang>/]<module>/<presenter>/<action>/[<id>]", [
+                    'lang' => 'en',
+                    'module' => 'Homepage',
+                    'presenter' => 'Homepage',
+                    'action' => 'default',
+                    'id' => null
+                ]);
             }
-        } catch (\Exception $e) {
-            $this[] = new Route("/[<lang>/]<module>/<presenter>/<action>/[<id>]", [
-                'lang' => 'en',
-                'module' => 'Homepage',
-                'presenter' => 'Homepage',
-                'action' => 'default',
-                'id' => null
-            ]);
         }
     }
 
